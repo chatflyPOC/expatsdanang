@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    mcpServer: false,
+  },
   images: {
     remotePatterns: [
       // Allow real listing photos hosted on common image CDNs
