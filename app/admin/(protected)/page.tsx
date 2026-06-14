@@ -1,0 +1,327 @@
+'use client'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { ServiceRequest, Listing, Review, SiteStat } from '@/types'
+import { clsx } from 'clsx'
+
+type Tab = 'requests' | 'listings' | 'reviews' | 'stats'
+
+export default function AdminPage() {
+  const [tab, setTab] = useState<Tab>('requests')
+
+  return (
+    <div>
+      <div className="flex gap-1 mb-8 border-b border-[#E5E7EB]">
+        {(['requests', 'listings', 'reviews', 'stats'] as Tab[]).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={clsx(
+              'px-5 py-2.5 text-sm font-medium capitalize transition-colors',
+              tab === t
+                ? 'border-b-2 border-[#1D9E75] text-[#1D9E75]'
+                : 'text-gray-500 hover:text-gray-900'
+            )}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'requests' && <RequestsTab />}
+      {tab === 'listings' && <ListingsTab />}
+      {tab === 'reviews' && <ReviewsTab />}
+      {tab === 'stats' && <StatsTab />}
+    </div>
+  )
+}
+
+function RequestsTab() {
+  const supabase = useMemo(() => createClient(), [])
+  const [requests, setRequests] = useState<ServiceRequest[]>([])
+  const [selected, setSelected] = useState<ServiceRequest | null>(null)
+
+  const load = useCallback(async () => {
+    const { data } = await supabase
+      .from('service_requests')
+      .select('*')
+      .order('created_at', { ascending: false })
+    setRequests(data || [])
+  }, [supabase])
+
+  useEffect(() => { load() }, [load])
+
+  const updateStatus = async (id: string, status: ServiceRequest['status']) => {
+    await supabase.from('service_requests').update({ status }).eq('id', id)
+    setSelected(prev => prev?.id === id ? { ...prev, status } : prev)
+    load()
+  }
+
+  const STATUS_COLORS: Record<string, string> = {
+    new: 'bg-blue-100 text-blue-700',
+    'in-progress': 'bg-amber-100 text-amber-700',
+    done: 'bg-green-100 text-green-700',
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#E5E7EB] text-left">
+              <th className="pb-3 font-medium text-gray-500">Date</th>
+              <th className="pb-3 font-medium text-gray-500">Name</th>
+              <th className="pb-3 font-medium text-gray-500">Services</th>
+              <th className="pb-3 font-medium text-gray-500">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {requests.length === 0 && (
+              <tr><td colSpan={4} className="py-8 text-center text-gray-400 text-sm">No requests yet</td></tr>
+            )}
+            {requests.map(r => (
+              <tr
+                key={r.id}
+                onClick={() => setSelected(r)}
+                className={clsx(
+                  'border-b border-[#E5E7EB] cursor-pointer hover:bg-gray-50',
+                  selected?.id === r.id && 'bg-[#f0fdf9]'
+                )}
+              >
+                <td className="py-3 text-gray-400">{new Date(r.created_at).toLocaleDateString()}</td>
+                <td className="py-3 font-medium">{r.name}</td>
+                <td className="py-3 text-gray-500 text-xs">{r.services.slice(0, 2).join(', ')}</td>
+                <td className="py-3">
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', STATUS_COLORS[r.status])}>
+                    {r.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <div className="border border-[#E5E7EB] rounded-xl p-6 space-y-4">
+          <div className="flex items-start justify-between">
+            <h2 className="font-semibold text-gray-900">{selected.name}</h2>
+            <button onClick={() => setSelected(null)} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
+          </div>
+          <div className="text-sm space-y-2">
+            <p><span className="text-gray-400">Services:</span> {selected.services.join(', ')}</p>
+            <p><span className="text-gray-400">Timeline:</span> {selected.timeline}</p>
+            <p><span className="text-gray-400">Contact:</span> {selected.contact_pref} — {selected.contact_value}</p>
+            {selected.details && <p><span className="text-gray-400">Details:</span> {selected.details}</p>}
+            <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Update status</p>
+            <div className="flex gap-2">
+              {(['new', 'in-progress', 'done'] as const).map(s => (
+                <button
+                  key={s}
+                  onClick={() => updateStatus(selected.id, s)}
+                  className={clsx(
+                    'text-xs px-3 py-1.5 rounded-full border transition-colors',
+                    selected.status === s
+                      ? 'bg-[#1D9E75] text-white border-[#1D9E75]'
+                      : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+                  )}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ListingsTab() {
+  const supabase = useMemo(() => createClient(), [])
+  const [listings, setListings] = useState<Listing[]>([])
+  const [editing, setEditing] = useState<Partial<Listing> | null>(null)
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from('listings').select('*').order('sort_order')
+    setListings(data || [])
+  }, [supabase])
+
+  useEffect(() => { load() }, [load])
+
+  const save = async () => {
+    if (!editing) return
+    if (editing.id) {
+      const { id, created_at, ...rest } = editing as Listing
+      await supabase.from('listings').update(rest).eq('id', id)
+    } else {
+      await supabase.from('listings').insert(editing)
+    }
+    setEditing(null)
+    load()
+  }
+
+  const toggle = async (id: string, field: 'active' | 'verified', val: boolean) => {
+    await supabase.from('listings').update({ [field]: val }).eq('id', id)
+    load()
+  }
+
+  const FIELDS = ['title', 'service_slug', 'price', 'location', 'area', 'description', 'image_url'] as const
+
+  return (
+    <div>
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setEditing({ active: true, verified: false, sort_order: 0 })}
+          className="text-sm font-medium bg-[#1D9E75] text-white px-4 py-2 rounded-full hover:bg-[#0F6E56]"
+        >
+          + New listing
+        </button>
+      </div>
+
+      {editing && (
+        <div className="border border-[#E5E7EB] rounded-xl p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {FIELDS.map(f => (
+            <div key={f}>
+              <label className="text-xs text-gray-400 mb-1 block capitalize">{f.replace(/_/g, ' ')}</label>
+              <input
+                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75]"
+                value={(editing as Record<string, string>)[f] || ''}
+                onChange={e => setEditing(prev => ({ ...prev, [f]: e.target.value }))}
+              />
+            </div>
+          ))}
+          <div className="col-span-full flex gap-3 pt-2">
+            <button onClick={save} className="bg-[#1D9E75] text-white text-sm px-5 py-2 rounded-full hover:bg-[#0F6E56]">Save</button>
+            <button onClick={() => setEditing(null)} className="border border-[#D1D5DB] text-gray-600 text-sm px-5 py-2 rounded-full hover:bg-gray-50">Cancel</button>
+          </div>
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#E5E7EB] text-left">
+              <th className="pb-3 font-medium text-gray-500">Title</th>
+              <th className="pb-3 font-medium text-gray-500">Service</th>
+              <th className="pb-3 font-medium text-gray-500">Price</th>
+              <th className="pb-3 font-medium text-gray-500">Verified</th>
+              <th className="pb-3 font-medium text-gray-500">Active</th>
+              <th className="pb-3 font-medium text-gray-500"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {listings.length === 0 && (
+              <tr><td colSpan={6} className="py-8 text-center text-gray-400 text-sm">No listings yet</td></tr>
+            )}
+            {listings.map(l => (
+              <tr key={l.id} className="border-b border-[#E5E7EB]">
+                <td className="py-3 font-medium">{l.title}</td>
+                <td className="py-3 text-gray-500">{l.service_slug}</td>
+                <td className="py-3 text-gray-500">{l.price}</td>
+                <td className="py-3">
+                  <input type="checkbox" checked={l.verified} onChange={e => toggle(l.id, 'verified', e.target.checked)} className="accent-[#1D9E75]" />
+                </td>
+                <td className="py-3">
+                  <input type="checkbox" checked={l.active} onChange={e => toggle(l.id, 'active', e.target.checked)} className="accent-[#1D9E75]" />
+                </td>
+                <td className="py-3">
+                  <button onClick={() => setEditing(l)} className="text-xs text-[#1D9E75] hover:underline">Edit</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function ReviewsTab() {
+  const supabase = useMemo(() => createClient(), [])
+  const [reviews, setReviews] = useState<Review[]>([])
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false })
+    setReviews(data || [])
+  }, [supabase])
+
+  useEffect(() => { load() }, [load])
+
+  const setStatus = async (id: string, status: 'approved' | 'rejected') => {
+    await supabase.from('reviews').update({ status }).eq('id', id)
+    load()
+  }
+
+  return (
+    <div className="space-y-4">
+      {reviews.length === 0 && (
+        <p className="text-center py-12 text-gray-400 text-sm">No reviews yet</p>
+      )}
+      {reviews.map(r => (
+        <div key={r.id} className="border border-[#E5E7EB] rounded-xl p-5">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-amber-400 mb-1 text-sm">{'★'.repeat(r.rating)}</p>
+              <p className="text-sm text-gray-700 italic mb-2">&ldquo;{r.quote}&rdquo;</p>
+              <p className="text-xs font-medium text-gray-900">{r.author_name}</p>
+              {r.author_info && <p className="text-xs text-gray-400">{r.author_info}</p>}
+            </div>
+            <span className={clsx(
+              'text-xs px-2 py-0.5 rounded-full font-medium ml-4 flex-shrink-0',
+              r.status === 'approved' ? 'bg-green-100 text-green-700' :
+              r.status === 'rejected' ? 'bg-red-100 text-red-600' :
+              'bg-amber-100 text-amber-700'
+            )}>
+              {r.status}
+            </span>
+          </div>
+          {r.status === 'pending' && (
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => setStatus(r.id, 'approved')} className="text-xs bg-green-50 text-green-700 border border-green-200 px-4 py-1.5 rounded-full hover:bg-green-100">Approve</button>
+              <button onClick={() => setStatus(r.id, 'rejected')} className="text-xs bg-red-50 text-red-600 border border-red-200 px-4 py-1.5 rounded-full hover:bg-red-100">Reject</button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function StatsTab() {
+  const supabase = useMemo(() => createClient(), [])
+  const [stats, setStats] = useState<SiteStat[]>([])
+  const [saving, setSaving] = useState<string | null>(null)
+
+  useEffect(() => {
+    supabase.from('site_stats').select('*').then(({ data }) => setStats(data || []))
+  }, [supabase])
+
+  const update = async (key: string, value: string) => {
+    setSaving(key)
+    await supabase.from('site_stats').update({ value }).eq('key', key)
+    setSaving(null)
+  }
+
+  return (
+    <div className="max-w-md space-y-4">
+      <p className="text-sm text-gray-500">Changes save on blur (clicking away from field).</p>
+      {stats.map(s => (
+        <div key={s.key} className="flex items-center gap-4">
+          <label className="text-sm text-gray-500 w-36 flex-shrink-0">{s.label || s.key}</label>
+          <input
+            className="flex-1 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75]"
+            defaultValue={s.value}
+            onBlur={e => {
+              if (e.target.value !== s.value) update(s.key, e.target.value)
+            }}
+          />
+          {saving === s.key && <span className="text-xs text-[#1D9E75]">✓ Saved</span>}
+        </div>
+      ))}
+    </div>
+  )
+}

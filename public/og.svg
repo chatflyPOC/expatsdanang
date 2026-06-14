@@ -1,0 +1,34 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Expats Da Nang — Your local assistant in Da Nang, Vietnam</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0C4368"/>
+      <stop offset="1" stop-color="#072B44"/>
+    </linearGradient>
+    <linearGradient id="m" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#23B58A"/>
+      <stop offset="1" stop-color="#0F6E56"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1D9E75"/>
+      <stop offset="0.5" stop-color="#1AA5D8"/>
+      <stop offset="1" stop-color="#F5A623"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="10" fill="url(#accent)"/>
+
+  <g transform="translate(490,118)">
+    <rect width="140" height="140" rx="40" fill="url(#m)"/>
+    <circle cx="92" cy="50" r="18" fill="#F5A623"/>
+    <path d="M26 99 Q50 64 72 96 Q94 64 116 99" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 112 Q44 119 60 112 T92 112 T120 112" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity="0.85"/>
+  </g>
+
+  <text x="600" y="360" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="78" font-weight="700" fill="#FFFFFF">Expats <tspan fill="#5DCAA5">Da Nang</tspan></text>
+  <text x="600" y="416" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="400" fill="#A8D4F0">Your local assistant in Da Nang, Vietnam</text>
+
+  <line x1="500" y1="470" x2="700" y2="470" stroke="#1AA5D8" stroke-width="2" opacity="0.5"/>
+  <text x="600" y="512" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="500" letter-spacing="6" fill="#F5A623">LIVE, WORK &amp; CONNECT</text>
+</svg>
