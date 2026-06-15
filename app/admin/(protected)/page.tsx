@@ -305,35 +305,35 @@ function RequestsTab() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="overflow-x-auto">
+    <div className={clsx('grid gap-6', selected ? 'lg:grid-cols-[1fr_380px]' : 'grid-cols-1')}>
+      <div className="bg-white rounded-xl border border-[#edf0f5] shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#E5E7EB] text-left">
-              <th className="pb-3 font-medium text-gray-500">Date</th>
-              <th className="pb-3 font-medium text-gray-500">Name</th>
-              <th className="pb-3 font-medium text-gray-500">Services</th>
-              <th className="pb-3 font-medium text-gray-500">Assigned</th>
-              <th className="pb-3 font-medium text-gray-500">Status</th>
+            <tr className="text-left text-gray-400 border-b border-[#edf0f5] bg-[#fafbfd]">
+              <th className="px-5 py-3 font-medium">Date</th>
+              <th className="px-5 py-3 font-medium">Name</th>
+              <th className="px-5 py-3 font-medium">Services</th>
+              <th className="px-5 py-3 font-medium">Assigned</th>
+              <th className="px-5 py-3 font-medium">Status</th>
             </tr>
           </thead>
           <tbody>
             {requests.length === 0 && (
-              <tr><td colSpan={5} className="py-8 text-center text-gray-400 text-sm">No requests yet</td></tr>
+              <tr><td colSpan={5} className="px-5 py-10 text-center text-gray-400 text-sm">No requests yet</td></tr>
             )}
             {requests.map(r => (
               <tr
                 key={r.id}
                 onClick={() => setSelected(r)}
                 className={clsx(
-                  'border-b border-[#E5E7EB] cursor-pointer hover:bg-gray-50',
-                  selected?.id === r.id && 'bg-[#f0fdf9]'
+                  'border-b border-[#f3f5f9] last:border-0 cursor-pointer transition-colors',
+                  selected?.id === r.id ? 'bg-[#f0fdf9]' : 'hover:bg-[#f9fafc]'
                 )}
               >
-                <td className="py-3 text-gray-400">{new Date(r.created_at).toLocaleDateString()}</td>
-                <td className="py-3 font-medium">{r.name}</td>
-                <td className="py-3 text-gray-500 text-xs">{r.services.slice(0, 2).join(', ')}</td>
-                <td className="py-3">
+                <td className="px-5 py-3 text-gray-400 whitespace-nowrap">{new Date(r.created_at).toLocaleDateString()}</td>
+                <td className="px-5 py-3 font-medium text-gray-700">{r.name}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.services.slice(0, 2).join(', ')}</td>
+                <td className="px-5 py-3">
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', ASSIGN_COLORS[r.assignment_status])}>
                     {r.assignment_status}
                   </span>
@@ -341,7 +341,7 @@ function RequestsTab() {
                     <span className="block text-[11px] text-gray-400 mt-0.5">{partners[r.assigned_partner_id] || '—'}</span>
                   )}
                 </td>
-                <td className="py-3">
+                <td className="px-5 py-3">
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', STATUS_COLORS[r.status])}>
                     {r.status}
                   </span>
@@ -353,7 +353,7 @@ function RequestsTab() {
       </div>
 
       {selected && (
-        <div className="border border-[#E5E7EB] rounded-xl p-6 space-y-4">
+        <div className="bg-white border border-[#edf0f5] shadow-sm rounded-xl p-6 space-y-4 h-fit">
           <div className="flex items-start justify-between">
             <h2 className="font-semibold text-gray-900">{selected.name}</h2>
             <button onClick={() => setSelected(null)} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
