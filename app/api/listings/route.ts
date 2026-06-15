@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const price_range = searchParams.get('price_range')
 
   const supabase = await createClient()
-  let query = supabase.from('listings').select('*').eq('active', true)
+  let query = supabase.from('listings').select('*').eq('active', true).eq('status', 'approved')
 
   if (service_slug) query = query.eq('service_slug', service_slug)
   if (area) query = query.eq('area', area)
