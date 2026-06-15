@@ -4,36 +4,255 @@ import { createClient } from '@/lib/supabase/client'
 import { ServiceRequest, Listing, Review, SiteStat, Partner } from '@/types'
 import { SERVICES } from '@/lib/services'
 import { clsx } from 'clsx'
+import {
+  LayoutDashboard, Inbox, Users, ClipboardList, Star, SlidersHorizontal,
+  Search, Menu, LogOut, Bell, type LucideIcon,
+} from 'lucide-react'
 
-type Tab = 'requests' | 'partners' | 'listings' | 'reviews' | 'stats'
+type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats'
+
+const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[] }[] = [
+  { group: 'Main', items: [{ id: 'overview', label: 'Overview', icon: LayoutDashboard }] },
+  {
+    group: 'Operations',
+    items: [
+      { id: 'requests', label: 'Requests', icon: Inbox },
+      { id: 'partners', label: 'Partners', icon: Users },
+      { id: 'listings', label: 'Listings', icon: ClipboardList },
+      { id: 'reviews', label: 'Reviews', icon: Star },
+    ],
+  },
+  { group: 'Site', items: [{ id: 'stats', label: 'Stats', icon: SlidersHorizontal }] },
+]
+
+const TITLES: Record<Tab, string> = {
+  overview: 'Overview', requests: 'Service requests', partners: 'Partners',
+  listings: 'Listings', reviews: 'Reviews', stats: 'Site stats',
+}
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<Tab>('requests')
+  const supabase = useMemo(() => createClient(), [])
+  const [tab, setTab] = useState<Tab>('overview')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [email, setEmail] = useState('')
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ''))
+  }, [supabase])
+
+  const go = (t: Tab) => { setTab(t); setSidebarOpen(false) }
 
   return (
-    <div>
-      <div className="flex gap-1 mb-8 border-b border-[#E5E7EB]">
-        {(['requests', 'partners', 'listings', 'reviews', 'stats'] as Tab[]).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={clsx(
-              'px-5 py-2.5 text-sm font-medium capitalize transition-colors',
-              tab === t
-                ? 'border-b-2 border-[#1D9E75] text-[#1D9E75]'
-                : 'text-gray-500 hover:text-gray-900'
-            )}
-          >
-            {t}
+    <div className="min-h-screen flex bg-[#f7f8fc]">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={clsx(
+        'fixed md:static inset-y-0 left-0 z-40 w-60 bg-[#222e3c] flex flex-col transition-transform',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      )}>
+        <div className="h-16 flex items-center gap-2 px-6 border-b border-white/5">
+          <span className="w-7 h-7 rounded-lg bg-[#1D9E75] flex items-center justify-center text-white font-bold text-sm">E</span>
+          <span className="text-white font-semibold">Expats Da Nang</span>
+        </div>
+        <nav className="flex-1 overflow-y-auto py-4">
+          {NAV.map(section => (
+            <div key={section.group} className="mb-4">
+              <p className="px-6 mb-2 text-[11px] uppercase tracking-wider text-gray-500">{section.group}</p>
+              {section.items.map(item => {
+                const Icon = item.icon
+                const active = tab === item.id
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => go(item.id)}
+                    className={clsx(
+                      'w-full flex items-center gap-3 px-6 py-2.5 text-sm transition-colors border-l-2',
+                      active
+                        ? 'bg-black/20 text-white border-[#1D9E75]'
+                        : 'text-gray-400 border-transparent hover:text-white hover:bg-white/5'
+                    )}
+                  >
+                    <Icon size={18} /> {item.label}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main column */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Topbar */}
+        <header className="h-16 bg-white border-b border-[#edf0f5] flex items-center gap-4 px-4 sm:px-6 sticky top-0 z-20">
+          <button onClick={() => setSidebarOpen(o => !o)} className="md:hidden text-gray-500" aria-label="Toggle menu">
+            <Menu size={22} />
           </button>
-        ))}
+          <div className="relative flex-1 max-w-md">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              placeholder="Search…"
+              className="w-full bg-[#f7f8fc] border border-transparent rounded-lg pl-9 pr-3 py-2 text-sm outline-none focus:border-[#1D9E75] focus:bg-white"
+            />
+          </div>
+          <div className="ml-auto flex items-center gap-4">
+            <button className="text-gray-400 hover:text-gray-600" aria-label="Notifications"><Bell size={20} /></button>
+            <form action="/api/auth/signout" method="post">
+              <button type="submit" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900">
+                <LogOut size={16} /> <span className="hidden sm:inline">Sign out</span>
+              </button>
+            </form>
+            <span className="w-9 h-9 rounded-full bg-[#1D9E75] text-white flex items-center justify-center text-sm font-medium uppercase">
+              {email ? email[0] : 'A'}
+            </span>
+          </div>
+        </header>
+
+        {/* Content */}
+        <main className="flex-1 p-4 sm:p-6 max-w-screen-2xl w-full mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-800">{TITLES[tab]}</h1>
+              <p className="text-sm text-gray-400">Expats Da Nang admin</p>
+            </div>
+          </div>
+
+          {tab === 'overview' && <OverviewTab onGo={go} />}
+          {tab === 'requests' && <RequestsTab />}
+          {tab === 'partners' && <PartnersTab />}
+          {tab === 'listings' && <ListingsTab />}
+          {tab === 'reviews' && <ReviewsTab />}
+          {tab === 'stats' && <StatsTab />}
+        </main>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Overview — real-data stat cards + recent activity
+// ---------------------------------------------------------------------------
+function StatCard({ label, value, icon: Icon, sub, accent }: {
+  label: string; value: number | string; icon: LucideIcon; sub?: string; accent: string
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-[#edf0f5] p-5 shadow-sm">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-gray-400 mb-2">{label}</p>
+          <p className="text-2xl font-bold text-gray-800">{value}</p>
+        </div>
+        <span className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${accent}1a`, color: accent }}>
+          <Icon size={20} />
+        </span>
+      </div>
+      {sub && <p className="text-xs text-gray-400 mt-3">{sub}</p>}
+    </div>
+  )
+}
+
+function OverviewTab({ onGo }: { onGo: (t: Tab) => void }) {
+  const supabase = useMemo(() => createClient(), [])
+  const [counts, setCounts] = useState({ requests: 0, pool: 0, partners: 0, listings: 0, pendingReviews: 0, submittedListings: 0 })
+  const [recent, setRecent] = useState<ServiceRequest[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    ;(async () => {
+      const head = { count: 'exact' as const, head: true }
+      const [reqs, pool, partners, listings, reviews, subListings, recentReqs] = await Promise.all([
+        supabase.from('service_requests').select('*', head),
+        supabase.from('service_requests').select('*', head).eq('assignment_status', 'pool'),
+        supabase.from('partners').select('*', head).eq('status', 'active'),
+        supabase.from('listings').select('*', head).eq('active', true).eq('status', 'approved'),
+        supabase.from('reviews').select('*', head).eq('status', 'pending'),
+        supabase.from('listings').select('*', head).eq('status', 'submitted'),
+        supabase.from('service_requests').select('*').order('created_at', { ascending: false }).limit(6),
+      ])
+      setCounts({
+        requests: reqs.count ?? 0, pool: pool.count ?? 0, partners: partners.count ?? 0,
+        listings: listings.count ?? 0, pendingReviews: reviews.count ?? 0, submittedListings: subListings.count ?? 0,
+      })
+      setRecent((recentReqs.data as ServiceRequest[]) || [])
+      setLoading(false)
+    })()
+  }, [supabase])
+
+  if (loading) return <p className="text-sm text-gray-400">Loading…</p>
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard label="Total requests" value={counts.requests} icon={Inbox} accent="#1D9E75"
+          sub={`${counts.pool} waiting in pool`} />
+        <StatCard label="Active partners" value={counts.partners} icon={Users} accent="#3b82f6" />
+        <StatCard label="Live listings" value={counts.listings} icon={ClipboardList} accent="#8b5cf6"
+          sub={counts.submittedListings ? `${counts.submittedListings} awaiting approval` : 'all reviewed'} />
+        <StatCard label="Pending reviews" value={counts.pendingReviews} icon={Star} accent="#f59e0b"
+          sub={counts.pendingReviews ? 'needs moderation' : 'all clear'} />
       </div>
 
-      {tab === 'requests' && <RequestsTab />}
-      {tab === 'partners' && <PartnersTab />}
-      {tab === 'listings' && <ListingsTab />}
-      {tab === 'reviews' && <ReviewsTab />}
-      {tab === 'stats' && <StatsTab />}
+      {/* Action needed */}
+      {(counts.pool > 0 || counts.submittedListings > 0 || counts.pendingReviews > 0) && (
+        <div className="flex flex-wrap gap-3">
+          {counts.pool > 0 && (
+            <button onClick={() => onGo('requests')} className="text-xs bg-[#f0fdf9] text-[#0F6E56] border border-[#1D9E75]/30 px-3 py-1.5 rounded-full hover:bg-[#e1f5ee]">
+              {counts.pool} unclaimed request{counts.pool > 1 ? 's' : ''} →
+            </button>
+          )}
+          {counts.submittedListings > 0 && (
+            <button onClick={() => onGo('listings')} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-full hover:bg-amber-100">
+              {counts.submittedListings} listing{counts.submittedListings > 1 ? 's' : ''} to approve →
+            </button>
+          )}
+          {counts.pendingReviews > 0 && (
+            <button onClick={() => onGo('reviews')} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-full hover:bg-amber-100">
+              {counts.pendingReviews} review{counts.pendingReviews > 1 ? 's' : ''} to moderate →
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Recent requests */}
+      <div className="bg-white rounded-xl border border-[#edf0f5] shadow-sm">
+        <div className="px-5 py-4 border-b border-[#edf0f5] flex items-center justify-between">
+          <h2 className="font-semibold text-gray-800">Recent requests</h2>
+          <button onClick={() => onGo('requests')} className="text-xs text-[#1D9E75] hover:underline">View all</button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-gray-400 border-b border-[#edf0f5]">
+                <th className="px-5 py-2.5 font-medium">Date</th>
+                <th className="px-5 py-2.5 font-medium">Name</th>
+                <th className="px-5 py-2.5 font-medium">Services</th>
+                <th className="px-5 py-2.5 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.length === 0 && (
+                <tr><td colSpan={4} className="px-5 py-8 text-center text-gray-400">No requests yet</td></tr>
+              )}
+              {recent.map(r => (
+                <tr key={r.id} className="border-b border-[#f3f5f9] last:border-0">
+                  <td className="px-5 py-3 text-gray-400">{new Date(r.created_at).toLocaleDateString()}</td>
+                  <td className="px-5 py-3 font-medium text-gray-700">{r.name}</td>
+                  <td className="px-5 py-3 text-gray-500 text-xs">{r.services.slice(0, 2).join(', ')}</td>
+                  <td className="px-5 py-3">
+                    <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', ASSIGN_COLORS[r.assignment_status])}>
+                      {r.assignment_status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }

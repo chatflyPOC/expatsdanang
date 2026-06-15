@@ -34,15 +34,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) redirect('/admin/login')
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-[#E5E7EB] px-6 py-4 flex items-center justify-between">
-        <p className="font-semibold text-gray-900">Admin — Expats Da Nang</p>
-        <form action="/api/auth/signout" method="post">
-          <button type="submit" className="text-sm text-gray-500 hover:text-gray-900">Sign out</button>
-        </form>
-      </div>
-      <div className="max-w-6xl mx-auto px-4 py-8">{children}</div>
-    </div>
-  )
+  // The admin shell (sidebar + topbar) is rendered by the page itself.
+  return <>{children}</>
 }
