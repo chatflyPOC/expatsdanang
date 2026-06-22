@@ -12,6 +12,7 @@ const SERVICES = [
 
 const RESOURCES = [
   { label: 'Guides', href: '/guides' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'About', href: '/about' },
   { label: 'Get Help', href: '/get-help' },
 ]
