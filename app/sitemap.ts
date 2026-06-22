@@ -22,9 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const guidePages: MetadataRoute.Sitemap = GUIDES.map((g) => ({
     url: `${SITE.url}/guides/${g.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly',
-    priority: 0.7,
+    lastModified: new Date('2026-06-22'),
+    changeFrequency: 'weekly',
+    priority: 0.85,
   }))
 
   return [...staticPages, ...servicePages, ...guidePages]
