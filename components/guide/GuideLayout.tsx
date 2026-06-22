@@ -6,6 +6,8 @@ import { ReadingProgress } from '@/components/guide/ReadingProgress'
 import { JsonLd } from '@/components/JsonLd'
 import { articleLd, breadcrumbLd } from '@/lib/seo'
 import { GUIDE_HERO_MAP } from '@/components/art/DanangScene'
+import { GuideRating } from '@/components/guide/GuideRating'
+import { createClient } from '@/lib/supabase/server'
 
 interface GuideLayoutProps {
   meta: GuideMeta
@@ -16,17 +18,33 @@ interface GuideLayoutProps {
   children: React.ReactNode
 }
 
-export function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLayoutProps) {
+async function fetchRating(slug: string) {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('guide_rating_aggregates')
+      .select('rating_value, review_count')
+      .eq('guide_slug', slug)
+      .single()
+    if (!data) return null
+    return { ratingValue: Number(data.rating_value), reviewCount: Number(data.review_count) }
+  } catch {
+    return null
+  }
+}
+
+export async function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLayoutProps) {
   const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
   const service = meta.service ? getService(meta.service) : undefined
   const related = relatedGuides(meta.slug)
   const HeroArt = GUIDE_HERO_MAP[meta.slug]
+  const rating = await fetchRating(meta.slug)
 
   return (
     <>
       <JsonLd
         data={[
-          articleLd(meta),
+          articleLd(meta, rating),
           breadcrumbLd([
             { name: 'Home', path: '/' },
             { name: 'Guides', path: '/guides' },
@@ -66,6 +84,11 @@ export function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLa
               </div>
             </div>
             {children}
+            <GuideRating
+              slug={meta.slug}
+              initialRating={rating?.ratingValue ?? null}
+              initialCount={rating?.reviewCount ?? 0}
+            />
           </article>
 
           {/* Sidebar */}

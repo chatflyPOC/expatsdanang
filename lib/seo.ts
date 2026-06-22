@@ -93,7 +93,12 @@ export function breadcrumbLd(items: { name: string; path: string }[]) {
   }
 }
 
-export function articleLd(meta: GuideMeta) {
+export interface AggregateRating {
+  ratingValue: number
+  reviewCount: number
+}
+
+export function articleLd(meta: GuideMeta, aggregateRating?: AggregateRating | null) {
   const url = absoluteUrl(`/guides/${meta.slug}`)
   return {
     '@type': 'BlogPosting',
@@ -109,6 +114,17 @@ export function articleLd(meta: GuideMeta) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     articleSection: meta.category,
     isAccessibleForFree: true,
+    ...(aggregateRating && aggregateRating.reviewCount > 0
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: aggregateRating.ratingValue.toFixed(1),
+            reviewCount: aggregateRating.reviewCount,
+            bestRating: '5',
+            worstRating: '1',
+          },
+        }
+      : {}),
   }
 }
 
