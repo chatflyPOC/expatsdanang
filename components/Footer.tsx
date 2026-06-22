@@ -107,7 +107,7 @@ export function Footer() {
             {' '}·{' '}
             MST: 0402211642
             {' '}·{' '}
-            Tầng 6 - Toà nhà PvcomBank, Số 2 Đường 30/4, Phường Hoà Cường Bắc, Quận Hải Châu, TP Đà Nẵng, Việt Nam
+            Floor 6, PvcomBank Building, 2 30/4 Street, Hoa Cuong Bac Ward, Hai Chau District, Da Nang City, Vietnam
           </p>
         </div>
       </div>

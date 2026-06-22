@@ -153,9 +153,9 @@ export default function AboutPage() {
             <div>
               <p className="text-xs text-gray-400 mb-1">Registered address</p>
               <p className="text-sm font-medium text-gray-800">
-                Tầng 6 - Toà nhà PvcomBank, Số 2 Đường 30/4,<br />
-                Phường Hoà Cường Bắc, Quận Hải Châu,<br />
-                Thành phố Đà Nẵng, Việt Nam
+                Floor 6, PvcomBank Building, 2 30/4 Street,<br />
+                Hoa Cuong Bac Ward, Hai Chau District,<br />
+                Da Nang City, Vietnam
               </p>
             </div>
           </div>
