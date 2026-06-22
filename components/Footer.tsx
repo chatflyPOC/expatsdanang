@@ -25,10 +25,10 @@ export function Footer() {
     <footer className="bg-[#0A3A5C] text-white">
       {/* Main footer body */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand col */}
-          <div className="md:col-span-4">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-5">
               <Logo variant="dark" size="lg" />
             </Link>
@@ -45,7 +45,7 @@ export function Footer() {
           </div>
 
           {/* Services col */}
-          <div className="md:col-span-3 md:col-start-6">
+          <div>
             <p className="text-xs font-semibold tracking-widest text-[#1AA5D8] uppercase mb-4">Services</p>
             <ul className="space-y-2.5">
               {SERVICES.map(s => (
@@ -58,10 +58,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Resources + Contact col */}
-          <div className="md:col-span-3">
+          {/* Resources col */}
+          <div>
             <p className="text-xs font-semibold tracking-widest text-[#1AA5D8] uppercase mb-4">Resources</p>
-            <ul className="space-y-2.5 mb-8">
+            <ul className="space-y-2.5">
               {RESOURCES.map(r => (
                 <li key={r.href}>
                   <Link href={r.href} className="text-sm text-[#A8D4F0] hover:text-white transition-colors">
@@ -70,6 +70,10 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Contact col */}
+          <div>
             <p className="text-xs font-semibold tracking-widest text-[#1AA5D8] uppercase mb-4">Contact</p>
             <ul className="space-y-2.5">
               <li>
