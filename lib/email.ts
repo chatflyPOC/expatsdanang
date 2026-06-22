@@ -115,18 +115,19 @@ export async function sendAdminNotification(data: ServiceRequestInput & { id: st
 </body>
 </html>`
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: 'Expats Da Nang <noreply@expatsdanang.com>',
     to: process.env.ADMIN_EMAIL!,
     subject,
     html,
   })
+  if (error) throw new Error(`Resend admin notification failed: ${JSON.stringify(error)}`)
 }
 
 export async function sendUserConfirmation(data: ServiceRequestInput) {
   if (data.contact_pref !== 'email') return
   const resend = getResend()
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: 'Expats Da Nang <hello@expatsdanang.com>',
     to: data.contact_value,
     subject: "We received your request — we'll be in touch within 2 hours",
@@ -140,4 +141,5 @@ export async function sendUserConfirmation(data: ServiceRequestInput) {
       <p>— Expats Da Nang team</p>
     `,
   })
+  if (error) throw new Error(`Resend user confirmation failed: ${JSON.stringify(error)}`)
 }

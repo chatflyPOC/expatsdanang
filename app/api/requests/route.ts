@@ -21,10 +21,15 @@ export async function POST(req: NextRequest) {
 
     if (error) throw error
 
-    await Promise.allSettled([
+    const emailResults = await Promise.allSettled([
       sendAdminNotification({ ...parsed.data, id: data.id }),
       sendUserConfirmation(parsed.data),
     ])
+    emailResults.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.error(`[email] ${i === 0 ? 'admin notification' : 'user confirmation'} failed:`, r.reason)
+      }
+    })
 
     return NextResponse.json({ success: true, id: data.id })
   } catch (err) {
