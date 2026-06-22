@@ -34,6 +34,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) redirect('/admin/login')
 
+  // Partners belong in the partner portal, not the admin console
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('user_id', user.id).single()
+  if (profile?.role === 'partner') redirect('/partner')
+
   // The admin shell (sidebar + topbar) is rendered by the page itself.
   return <>{children}</>
 }
