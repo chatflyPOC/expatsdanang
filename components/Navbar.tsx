@@ -152,15 +152,23 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="md:hidden p-2 text-gray-700"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-          >
-            {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* Mobile: Get Help + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <Link
+              href="/get-help"
+              className="inline-flex items-center bg-[#1D9E75] text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-[#0F6E56] transition-colors"
+            >
+              Get help
+            </Link>
+            <button
+              className="p-2 text-gray-700"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              aria-expanded={open}
+            >
+              {open ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile panel */}
