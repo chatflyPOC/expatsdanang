@@ -6,10 +6,11 @@ import { SERVICES } from '@/lib/services'
 import { clsx } from 'clsx'
 import {
   LayoutDashboard, Inbox, Users, ClipboardList, Star, SlidersHorizontal,
-  Search, Menu, LogOut, Bell, type LucideIcon,
+  Search, Menu, LogOut, Bell, BookOpen, type LucideIcon,
 } from 'lucide-react'
+import { GuidesTab } from './guides-tab'
 
-type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats'
+type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats' | 'guides'
 
 const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[] }[] = [
   { group: 'Main', items: [{ id: 'overview', label: 'Overview', icon: LayoutDashboard }] },
@@ -22,12 +23,16 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
       { id: 'reviews', label: 'Reviews', icon: Star },
     ],
   },
+  {
+    group: 'Content',
+    items: [{ id: 'guides', label: 'Guides', icon: BookOpen }],
+  },
   { group: 'Site', items: [{ id: 'stats', label: 'Stats', icon: SlidersHorizontal }] },
 ]
 
 const TITLES: Record<Tab, string> = {
   overview: 'Overview', requests: 'Service requests', partners: 'Partners',
-  listings: 'Listings', reviews: 'Reviews', stats: 'Site stats',
+  listings: 'Listings', reviews: 'Reviews', stats: 'Site stats', guides: 'Guides',
 }
 
 export default function AdminPage() {
@@ -127,6 +132,7 @@ export default function AdminPage() {
           {tab === 'listings' && <ListingsTab />}
           {tab === 'reviews' && <ReviewsTab />}
           {tab === 'stats' && <StatsTab />}
+          {tab === 'guides' && <GuidesTab />}
         </main>
       </div>
     </div>
