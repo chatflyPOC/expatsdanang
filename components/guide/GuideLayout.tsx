@@ -5,6 +5,7 @@ import { getService } from '@/lib/services'
 import { ReadingProgress } from '@/components/guide/ReadingProgress'
 import { JsonLd } from '@/components/JsonLd'
 import { articleLd, breadcrumbLd } from '@/lib/seo'
+import { GUIDE_HERO_MAP } from '@/components/art/DanangScene'
 
 interface GuideLayoutProps {
   meta: GuideMeta
@@ -19,6 +20,7 @@ export function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLa
   const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
   const service = meta.service ? getService(meta.service) : undefined
   const related = relatedGuides(meta.slug)
+  const HeroArt = GUIDE_HERO_MAP[meta.slug]
 
   return (
     <>
@@ -42,6 +44,13 @@ export function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLa
           <ChevronRight size={12} />
           <span className="text-gray-700">{meta.category}</span>
         </nav>
+
+        {/* Hero illustration — full width above the two-column grid */}
+        {HeroArt && (
+          <div className="w-full rounded-2xl overflow-hidden mb-10 shadow-sm">
+            <HeroArt className="w-full h-auto" />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_290px] gap-12">
           {/* Main content */}

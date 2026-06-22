@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Check, X, AlertTriangle, Info, Lightbulb } from 'lucide-react'
 
 /** A titled content section with a consistent heading. */
@@ -156,6 +157,31 @@ export function DataTable({ headers, rows }: { headers: string[]; rows: string[]
         </tbody>
       </table>
     </div>
+  )
+}
+
+/** Inline article image with optional caption. Accepts any URL allowed in next.config.ts. */
+export function GuideImage({ src, alt, caption, priority = false }: {
+  src: string; alt: string; caption?: string; priority?: boolean
+}) {
+  return (
+    <figure className="my-8 rounded-2xl overflow-hidden border border-[#E5E7EB]">
+      <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 760px"
+          priority={priority}
+        />
+      </div>
+      {caption && (
+        <figcaption className="text-xs text-gray-400 text-center py-2.5 px-4 bg-gray-50">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
   )
 }
 
