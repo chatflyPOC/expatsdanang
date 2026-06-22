@@ -111,6 +111,31 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Company registration */}
+      <section className="border-t border-[#E5E7EB] bg-white">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Legal entity</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <p className="text-xs text-gray-400 mb-1">Registered company</p>
+              <p className="text-sm font-medium text-gray-800">CHATFLY COMPANY LIMITED</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-1">Tax ID (Mã số thuế)</p>
+              <p className="text-sm font-medium text-gray-800">0402211642</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-1">Registered address</p>
+              <p className="text-sm font-medium text-gray-800">
+                Tầng 6 - Toà nhà PvcomBank, Số 2 Đường 30/4,<br />
+                Phường Hoà Cường Bắc, Quận Hải Châu,<br />
+                Thành phố Đà Nẵng, Việt Nam
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-[#0F6E56] py-16 px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-2xl font-semibold text-[#9FE1CB] mb-3">Want to get in touch?</h2>

@@ -98,11 +98,24 @@ export function Footer() {
         </div>
       </div>
 
+      {/* Legal / company info row */}
+      <div className="border-t border-white/10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <p className="text-xs text-[#A8D4F0]/50 leading-relaxed text-center sm:text-left">
+            <span className="font-medium text-[#A8D4F0]/70">CHATFLY COMPANY LIMITED</span>
+            {' '}·{' '}
+            MST: 0402211642
+            {' '}·{' '}
+            Tầng 6 - Toà nhà PvcomBank, Số 2 Đường 30/4, Phường Hoà Cường Bắc, Quận Hải Châu, TP Đà Nẵng, Việt Nam
+          </p>
+        </div>
+      </div>
+
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-[#A8D4F0]/60">
-            © {year} Expats Da Nang. All rights reserved.
+            © {year} Expats Da Nang · CHATFLY COMPANY LIMITED. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
             <Link href="/privacy" className="text-xs text-[#A8D4F0]/60 hover:text-white transition-colors">Privacy Policy</Link>
