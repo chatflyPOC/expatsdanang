@@ -92,6 +92,14 @@ export function Footer() {
               </li>
               <li>
                 <a
+                  href="tel:+840337788044"
+                  className="text-sm text-[#A8D4F0] hover:text-white transition-colors"
+                >
+                  +84 033 778 8044
+                </a>
+              </li>
+              <li>
+                <a
                   href="mailto:hello@expatsdanang.com"
                   className="text-sm text-[#A8D4F0] hover:text-white transition-colors"
                 >
