@@ -91,22 +91,48 @@ export default function AboutPage() {
       </section>
 
       {/* Story */}
-      <section className="bg-gray-50 border-t border-[#E5E7EB]">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Our story</p>
-          <div className="space-y-4 text-gray-600 leading-relaxed">
-            <p>
-              Da Nang has become one of Southeast Asia&apos;s most popular destinations for digital nomads and expats — great weather, affordable cost of living, fast internet, and a growing international community.
-            </p>
-            <p>
-              But arriving here without local connections is hard. Landlords who only speak Vietnamese, banks that turn foreigners away, visa rules that change without notice. The information online is often outdated or wrong.
-            </p>
-            <p>
-              We started by helping friends and friends-of-friends figure things out. Word spread. Now we help hundreds of expats a year — from people arriving for the first time to long-timers who need specific things sorted.
-            </p>
-            <p>
-              We keep things simple: you tell us what you need, we make it happen.
-            </p>
+      <section className="bg-[#0A3A5C] border-t border-white/10 overflow-hidden relative">
+        {/* Background watermark */}
+        <div aria-hidden className="pointer-events-none absolute right-0 top-0 w-[480px] h-[480px] opacity-[0.04] select-none">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="160" fontSize="200" fontFamily="Georgia, serif" fill="white">&ldquo;</text>
+          </svg>
+        </div>
+
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#1AA5D8] mb-12">Our story</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            {/* Left: lede + body */}
+            <div className="lg:col-span-7 space-y-6">
+              <p className="text-xl sm:text-2xl font-medium text-white leading-relaxed">
+                Da Nang has become one of Southeast Asia&apos;s most popular destinations for digital nomads and expats — great weather, affordable cost of living, fast internet, and a growing international community.
+              </p>
+              <p className="text-[#A8D4F0] leading-relaxed">
+                But arriving here without local connections is hard.{' '}
+                <span className="text-white font-medium">
+                  Landlords who only speak Vietnamese, banks that turn foreigners away, visa rules that change without notice.
+                </span>{' '}
+                The information online is often outdated or wrong.
+              </p>
+              <p className="text-[#A8D4F0] leading-relaxed">
+                We started by helping friends and friends-of-friends figure things out. Word spread. Now we help hundreds of expats a year — from people arriving for the first time to long-timers who need specific things sorted.
+              </p>
+            </div>
+
+            {/* Right: pull quote */}
+            <div className="lg:col-span-5 flex items-center">
+              <div className="border-l-2 border-[#F5A623] pl-6">
+                <p className="text-2xl sm:text-3xl font-semibold text-white leading-snug">
+                  You tell us what you need.
+                  <br />
+                  <span className="text-[#F5A623]">We make it happen.</span>
+                </p>
+                <p className="mt-4 text-sm text-[#A8D4F0]/70">
+                  — How we&apos;ve operated since day one
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
