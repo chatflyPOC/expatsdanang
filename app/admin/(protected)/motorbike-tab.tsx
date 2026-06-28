@@ -104,18 +104,22 @@ function MediaSection({ images, videoUrl, coverIndex, onImagesChange, onVideoCha
   onVideoChange: (url: string | null) => void
   onCoverChange: (idx: number) => void
 }) {
-  const supabase = useMemo(() => createClient(), [])
   const imgRef = useRef<HTMLInputElement>(null)
   const vidRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState<'image' | 'video' | null>(null)
   const [newUrl, setNewUrl] = useState('')
 
-  const uploadFile = async (file: File, folder: 'images' | 'videos'): Promise<string> => {
-    const ext = file.name.split('.').pop() ?? 'bin'
-    const path = `motorbike/${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-    const { error } = await supabase.storage.from('listing-images').upload(path, file, { upsert: true })
-    if (error) throw new Error(error.message)
-    return supabase.storage.from('listing-images').getPublicUrl(path).data.publicUrl
+  const uploadFile = async (file: File, folder: string): Promise<string> => {
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('folder', `motorbike/${folder}`)
+    const res = await fetch('/api/upload', { method: 'POST', body: fd })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error ?? 'Upload failed')
+    }
+    const { url } = await res.json()
+    return url
   }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

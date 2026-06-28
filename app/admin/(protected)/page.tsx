@@ -6,7 +6,7 @@ import { SERVICES } from '@/lib/services'
 import { clsx } from 'clsx'
 import {
   LayoutDashboard, Inbox, Users, ClipboardList, Star, SlidersHorizontal,
-  Search, Menu, LogOut, Bell, BookOpen, type LucideIcon,
+  Search, Menu, LogOut, Bell, BookOpen, Plus, X, type LucideIcon,
 } from 'lucide-react'
 import { GuidesTab } from './guides-tab'
 import { HousingTab } from './housing-tab'
@@ -594,19 +594,13 @@ type ServiceCfg = {
   titlePlaceholder: string; descriptionPlaceholder: string
 }
 
+// housing + motorbike-rental are managed in dedicated tabs — excluded here
 const SERVICE_CFG: Record<string, ServiceCfg> = {
   'airport-transfer': {
     priceLabel: 'Price (USD / trip)', pricePlaceholder: 'ex: 15',
     showArea: false, showLocation: true,
     titlePlaceholder: 'ex: Airport Pickup — City Centre Drop-off',
     descriptionPlaceholder: 'ex: English-speaking driver, meet & greet inside arrivals hall. Fixed price, no meter surprises. Available 24/7. Up to 3 passengers and 3 large bags.',
-  },
-  'housing': {
-    priceLabel: 'Rent (USD / month)', pricePlaceholder: 'ex: 450',
-    showArea: true, areaLabel: 'Area (m²)', areaPlaceholder: 'ex: 65',
-    showLocation: true,
-    titlePlaceholder: 'ex: 2BR Apartment near My Khe Beach',
-    descriptionPlaceholder: 'ex: Fully furnished 2-bedroom apartment, 65 m², 5 min walk to My Khe Beach. High-speed WiFi, AC in all rooms, private balcony. Long-term welcome.',
   },
   'bank-account': {
     priceLabel: 'Service fee (USD)', pricePlaceholder: 'ex: 30',
@@ -625,13 +619,6 @@ const SERVICE_CFG: Record<string, ServiceCfg> = {
     showArea: false, showLocation: false,
     titlePlaceholder: 'ex: Certified Lease Contract Translation (VN → EN)',
     descriptionPlaceholder: 'ex: Certified Vietnamese-to-English translation accepted by embassies and government offices. 1–2 business day turnaround. Stamp + credentials included.',
-  },
-  'motorbike-rental': {
-    priceLabel: 'Price (USD / day)', pricePlaceholder: 'ex: 7',
-    showArea: true, areaLabel: 'Engine / type', areaPlaceholder: 'ex: 110cc automatic scooter',
-    showLocation: true,
-    titlePlaceholder: 'ex: Honda Vision 110cc — City Scooter',
-    descriptionPlaceholder: 'ex: Well-maintained Honda Vision. Automatic, ideal for city riding. Helmet included. Free delivery within Da Nang city centre. Monthly discount available.',
   },
 }
 
@@ -693,13 +680,28 @@ function ListingsTab() {
   }
 
   const uploadImage = async (file: File): Promise<string> => {
-    const ext = file.name.split('.').pop() ?? 'jpg'
-    const path = `listings/${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('listing-images').upload(path, file, { upsert: true })
-    if (error) throw new Error(error.message)
-    const { data } = supabase.storage.from('listing-images').getPublicUrl(path)
-    return data.publicUrl
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('folder', 'listings')
+    const res = await fetch('/api/upload', { method: 'POST', body: fd })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error ?? 'Upload failed')
+    }
+    const { url } = await res.json()
+    return url
   }
+
+  // Tags helpers
+  const [tagInput, setTagInput] = useState('')
+  const addTag = (raw: string) => {
+    const tag = raw.trim().toLowerCase()
+    if (!tag) return
+    setEditing(prev => ({ ...prev, tags: [...(prev?.tags ?? []).filter(t => t !== tag), tag] }))
+    setTagInput('')
+  }
+  const removeTag = (tag: string) =>
+    setEditing(prev => ({ ...prev, tags: (prev?.tags ?? []).filter(t => t !== tag) }))
 
   const moderate = async (id: string, status: 'approved' | 'rejected') => {
     await supabase.from('listings').update({ status }).eq('id', id)
@@ -752,16 +754,30 @@ function ListingsTab() {
         <div className="border border-[#E5E7EB] rounded-xl p-6 mb-6 bg-white space-y-5">
 
           {/* Step 1 — Service selector */}
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block uppercase tracking-wide">Service</label>
-            <select
-              value={editing.service_slug || ''}
-              onChange={e => setEditing(prev => ({ ...prev, service_slug: e.target.value }))}
-              className="w-full sm:w-72 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75] bg-white"
-            >
-              <option value="">— Select a service —</option>
-              {SERVICES.map(s => <option key={s.slug} value={s.slug}>{s.title}</option>)}
-            </select>
+          <div className="flex flex-wrap items-end gap-4">
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1.5 block uppercase tracking-wide">Service</label>
+              <select
+                value={editing.service_slug || ''}
+                onChange={e => setEditing(prev => ({ ...prev, service_slug: e.target.value }))}
+                className="w-full sm:w-72 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75] bg-white"
+              >
+                <option value="">— Select a service —</option>
+                {SERVICES.filter(s => SERVICE_CFG[s.slug]).map(s => (
+                  <option key={s.slug} value={s.slug}>{s.title}</option>
+                ))}
+              </select>
+              <p className="text-[11px] text-gray-400 mt-1">Housing &amp; Motorbike are managed in dedicated tabs.</p>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1.5 block uppercase tracking-wide">Sort order</label>
+              <input
+                type="number" min={0}
+                className="w-24 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75]"
+                value={editing.sort_order ?? 0}
+                onChange={e => setEditing(prev => ({ ...prev, sort_order: Number(e.target.value) }))}
+              />
+            </div>
           </div>
 
           {/* Fields — only show once a service is selected */}
@@ -838,22 +854,57 @@ function ListingsTab() {
                 />
               </div>
 
+              {/* Tags */}
+              <div className="sm:col-span-2">
+                <label className="text-xs text-gray-400 mb-1 block">Tags <span className="text-gray-300">(shown as chips on card)</span></label>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {(editing.tags ?? []).map(tag => (
+                    <span key={tag} className="flex items-center gap-1 text-xs bg-gray-100 border border-[#E5E7EB] text-gray-600 px-2 py-0.5 rounded-full">
+                      {tag}
+                      <button type="button" onClick={() => removeTag(tag)} className="text-gray-400 hover:text-red-500">
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    value={tagInput}
+                    onChange={e => setTagInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(tagInput) } }}
+                    placeholder="Type a tag and press Enter…"
+                    className="flex-1 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => addTag(tagInput)}
+                    disabled={!tagInput.trim()}
+                    className="px-3 py-2 bg-[#1D9E75] text-white rounded-lg text-sm hover:bg-[#0F6E56] disabled:opacity-40"
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
+                <p className="text-[11px] text-gray-400 mt-1">e.g. "sedan", "english-driver", "24/7" — press Enter or comma to add</p>
+              </div>
+
               {/* Image upload */}
               <div className="sm:col-span-2">
                 <label className="text-xs text-gray-400 mb-1 block">Image</label>
                 <div className="flex items-start gap-4">
                   {imagePreview && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={imagePreview} alt="preview" className="w-24 h-24 object-cover rounded-lg border border-[#E5E7EB] flex-shrink-0" />
                   )}
                   <div className="flex-1">
                     <button
                       type="button"
                       onClick={() => fileRef.current?.click()}
-                      className="text-sm border border-dashed border-[#D1D5DB] text-gray-500 hover:border-[#1D9E75] hover:text-[#1D9E75] px-4 py-2.5 rounded-lg transition-colors w-full text-left"
+                      disabled={uploading}
+                      className="text-sm border border-dashed border-[#D1D5DB] text-gray-500 hover:border-[#1D9E75] hover:text-[#1D9E75] px-4 py-2.5 rounded-lg transition-colors w-full text-left disabled:opacity-50"
                     >
-                      {imagePreview ? '↑ Change image' : '+ Upload image'}
+                      {uploading ? 'Uploading…' : imagePreview ? '↑ Change image' : '+ Upload image'}
                     </button>
-                    <p className="text-[11px] text-gray-400 mt-1">JPG, PNG or WebP · max 5 MB</p>
+                    <p className="text-[11px] text-gray-400 mt-1">JPG, PNG or WebP · max 10 MB</p>
                     <input
                       ref={fileRef}
                       type="file"
