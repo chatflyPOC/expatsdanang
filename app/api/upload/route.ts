@@ -71,9 +71,7 @@ export async function POST(req: NextRequest) {
     resumable: false,
   })
 
-  // Make the file publicly accessible
-  await gcsFile.makePublic()
-
+  // Public read is controlled by bucket-level IAM (allUsers → Storage Object Viewer)
   const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${objectPath}`
   return NextResponse.json({ url: publicUrl })
 }
