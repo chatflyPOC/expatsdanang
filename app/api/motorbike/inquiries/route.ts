@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendMotorbikeInquiryNotification } from '@/lib/email'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -30,13 +31,18 @@ export async function POST(req: NextRequest) {
 
   const supabase = createAdminClient()
 
-  const { error } = await supabase.from('motorbike_inquiries').insert(data)
+  const { data: row, error } = await supabase
+    .from('motorbike_inquiries')
+    .insert(data)
+    .select('id')
+    .single()
+
   if (error) {
     console.error('[motorbike/inquiries]', error)
     return NextResponse.json({ error: 'Failed to submit' }, { status: 500 })
   }
 
-  // Increment inquiry_count
+  // Increment inquiry_count (fire and forget)
   supabase.from('motorbike_listings')
     .select('inquiry_count').eq('id', data.listing_id).single()
     .then(({ data: d }) => {
@@ -46,6 +52,11 @@ export async function POST(req: NextRequest) {
           .eq('id', data.listing_id).then(() => {})
       }
     })
+
+  // Notify admin
+  sendMotorbikeInquiryNotification({ ...data, id: row.id }).catch(e =>
+    console.error('[motorbike inquiry email]', e)
+  )
 
   return NextResponse.json({ ok: true })
 }
