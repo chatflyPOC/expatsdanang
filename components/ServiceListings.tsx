@@ -3,10 +3,64 @@ import { useState, useEffect } from 'react'
 import { FilterSidebar } from '@/components/FilterSidebar'
 import { ListingCard, ListingCardSkeleton } from '@/components/ListingCard'
 import { Listing } from '@/types'
+import Link from 'next/link'
+import { ArrowRight, Home, Bike } from 'lucide-react'
 
 const PER_PAGE = 6
 
+function MotorbikeCta() {
+  return (
+    <div className="border-t border-[#E5E7EB] py-10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-gradient-to-br from-[#E1F5EE] to-[#F0FAF6] border border-[#B6E5D4] rounded-2xl p-6 sm:p-8">
+        <div className="w-12 h-12 bg-[#1D9E75] rounded-xl flex items-center justify-center flex-none">
+          <Bike size={22} className="text-white" />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold text-[#085041] mb-1">Browse verified bikes</h2>
+          <p className="text-sm text-[#0F6E56]">
+            Scooters, semi-autos and trail bikes from local owners — transparent pricing,
+            helmet included, delivery available. Book directly, no middleman fees.
+          </p>
+        </div>
+        <Link
+          href="/motorbike-rental"
+          className="flex items-center gap-2 bg-[#1D9E75] text-white font-semibold text-sm px-5 py-3 rounded-full hover:bg-[#0F6E56] transition-colors whitespace-nowrap"
+        >
+          View all bikes <ArrowRight size={15} />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function HousingCta() {
+  return (
+    <div className="border-t border-[#E5E7EB] py-10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-gradient-to-br from-[#E1F5EE] to-[#F0FAF6] border border-[#B6E5D4] rounded-2xl p-6 sm:p-8">
+        <div className="w-12 h-12 bg-[#1D9E75] rounded-xl flex items-center justify-center flex-none">
+          <Home size={22} className="text-white" />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold text-[#085041] mb-1">Browse verified listings</h2>
+          <p className="text-sm text-[#0F6E56]">
+            Search apartments and houses with full details — transparent pricing, amenities, area map,
+            and direct inquiry to our concierge. No agent commissions for you.
+          </p>
+        </div>
+        <Link
+          href="/housing"
+          className="flex items-center gap-2 bg-[#1D9E75] text-white font-semibold text-sm px-5 py-3 rounded-full hover:bg-[#0F6E56] transition-colors whitespace-nowrap"
+        >
+          View all listings <ArrowRight size={15} />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 export function ServiceListings({ serviceSlug }: { serviceSlug: string }) {
+  if (serviceSlug === 'housing') return <HousingCta />
+  if (serviceSlug === 'motorbike-rental') return <MotorbikeCta />
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<Record<string, string>>({})

@@ -5,12 +5,17 @@ import { useState, useEffect, useRef } from 'react'
 import { Menu, X, MessageCircle, ChevronDown } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 
+// Direct top-level nav tabs (not in dropdown)
+const NAV_PRIMARY = [
+  { label: 'Housing', href: '/housing', match: '/housing' },
+  { label: 'Motorbike Rental', href: '/motorbike-rental', match: '/motorbike-rental' },
+]
+
+// Remaining services in the "Services" dropdown
 const SERVICES_DROPDOWN = [
   { label: 'Airport Transfer', href: '/services/airport-transfer' },
-  { label: 'Housing & Rental', href: '/services/housing' },
   { label: 'Visa & Documents', href: '/services/visa-documents' },
   { label: 'Bank Account', href: '/services/bank-account' },
-  { label: 'Motorbike Rental', href: '/services/motorbike-rental' },
   { label: 'Translation', href: '/services/translation' },
 ]
 
@@ -69,7 +74,25 @@ export function Navbar() {
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
 
-            {/* Services dropdown */}
+            {/* Primary tabs: Housing + Motorbike */}
+            {NAV_PRIMARY.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative px-3.5 py-2 text-sm rounded-full transition-colors ${
+                  isActive(l.match)
+                    ? 'text-[#0F6E56] font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {l.label}
+                {isActive(l.match) && (
+                  <span className="absolute left-3.5 right-3.5 -bottom-0.5 h-0.5 rounded-full bg-[#1D9E75]" />
+                )}
+              </Link>
+            ))}
+
+            {/* Services dropdown (remaining services) */}
             <div
               ref={servicesRef}
               className="relative"
@@ -78,22 +101,23 @@ export function Navbar() {
             >
               <button
                 className={`relative flex items-center gap-1 px-3.5 py-2 text-sm rounded-full transition-colors ${
-                  isServicesActive ? 'text-[#0F6E56] font-medium' : 'text-gray-600 hover:text-gray-900'
+                  isServicesActive && !isActive('/housing') && !isActive('/motorbike-rental')
+                    ? 'text-[#0F6E56] font-medium'
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
                 aria-expanded={servicesOpen}
                 aria-haspopup="true"
               >
-                Services
+                More services
                 <ChevronDown
                   size={14}
                   className={`transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`}
                 />
-                {isServicesActive && (
+                {isServicesActive && !isActive('/housing') && !isActive('/motorbike-rental') && (
                   <span className="absolute left-3.5 right-3.5 -bottom-0.5 h-0.5 rounded-full bg-[#1D9E75]" />
                 )}
               </button>
 
-              {/* Dropdown panel */}
               {servicesOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-52 bg-white rounded-2xl shadow-[0_8px_30px_-4px_rgba(10,58,92,0.18)] border border-[#E5E7EB] py-2 animate-fade-up">
                   {SERVICES_DROPDOWN.map((s) => (
@@ -114,7 +138,7 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Other nav links */}
+            {/* Guides / FAQ / About */}
             {NAV_LINKS.map((l) => (
               <Link
                 key={l.href}
@@ -174,8 +198,22 @@ export function Navbar() {
         {/* Mobile panel */}
         {open && (
           <div className="md:hidden border-t border-[#E5E7EB] bg-white px-4 py-4 flex flex-col gap-1 animate-fade-up">
-            {/* Services section in mobile */}
-            <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-widest text-gray-400">Services</p>
+            {/* Primary tabs first */}
+            {NAV_PRIMARY.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`px-3 py-2.5 rounded-lg text-sm font-medium ${
+                  isActive(l.match) ? 'bg-[#E1F5EE] text-[#0F6E56]' : 'text-gray-800 hover:bg-gray-50'
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <div className="my-1 border-t border-[#E5E7EB]" />
+            {/* Other services */}
+            <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-widest text-gray-400">More services</p>
             {SERVICES_DROPDOWN.map((s) => (
               <Link
                 key={s.href}

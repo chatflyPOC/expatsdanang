@@ -3,7 +3,11 @@ import { MapPin, ShieldCheck, ArrowRight, ImageIcon } from 'lucide-react'
 import { Listing } from '@/types'
 
 export function ListingCard({ listing }: { listing: Listing }) {
-  const href = `/get-help?service=${listing.service_slug}&ref=${encodeURIComponent(listing.title)}`
+  const params = new URLSearchParams({ service: listing.service_slug, ref: listing.title })
+  if (listing.price) params.set('price', listing.price)
+  if (listing.location) params.set('location', listing.location)
+  if (listing.tags?.length) params.set('tags', listing.tags.join(','))
+  const href = `/get-help?${params.toString()}`
   return (
     <Link
       href={href}

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Star, X, CheckCircle, PenLine } from 'lucide-react'
 
 export function LeaveReviewButton() {
@@ -13,7 +14,7 @@ export function LeaveReviewButton() {
       >
         <PenLine size={15} /> Leave a review
       </button>
-      {open && <ReviewModal onClose={() => setOpen(false)} />}
+      {open && createPortal(<ReviewModal onClose={() => setOpen(false)} />, document.body)}
     </>
   )
 }
@@ -32,6 +33,7 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
     setErr(null)
     if (quote.trim().length < 10) { setErr('Please write at least 10 characters.'); return }
     if (!name.trim()) { setErr('Please add your name.'); return }
+    if (!info.trim()) { setErr('Please add where you are from.'); return }
     setState('sending')
     try {
       const res = await fetch('/api/reviews', {
@@ -117,7 +119,7 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1.5 block">Where from <span className="text-gray-400 font-normal">(optional)</span></label>
+                <label className="text-sm font-medium text-gray-700 mb-1.5 block">Where from</label>
                 <input
                   value={info}
                   onChange={(e) => setInfo(e.target.value)}

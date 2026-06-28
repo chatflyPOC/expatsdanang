@@ -40,7 +40,7 @@ export function RequestForm() {
     resolver: zodResolver(serviceRequestSchema),
     defaultValues: {
       services: [],
-      contact_pref: 'whatsapp',
+      contact_pref: 'email',
     },
   })
 
@@ -48,27 +48,34 @@ export function RequestForm() {
   const formValues = watch()
 
   useEffect(() => {
-    const saved = sessionStorage.getItem(SESSION_KEY)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      Object.entries(parsed).forEach(([k, v]) => setValue(k as keyof ServiceRequestInput, v as string))
-    }
-
-    // Pre-fill from query params (e.g. /get-help?service=housing&ref=Studio+My+Khe)
+    // Pre-fill from query params (e.g. /get-help?service=motorbike-rental&ref=Honda+Wave&price=$5/day&location=An+Thuong&tags=Automatic,Delivery)
     const params = new URLSearchParams(window.location.search)
     const service = params.get('service')
     const ref = params.get('ref')
+    const price = params.get('price')
+    const location = params.get('location')
+    const tags = params.get('tags')
+
+    // Restore session only when not navigating from a listing card
+    if (!ref) {
+      const saved = sessionStorage.getItem(SESSION_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        Object.entries(parsed).forEach(([k, v]) => setValue(k as keyof ServiceRequestInput, v as string))
+      }
+    }
+
     const label = service ? SLUG_TO_SERVICE[service] : null
     if (label) {
       const current = (watch('services') as string[]) || []
       if (!current.includes(label)) setValue('services', [...current, label])
     }
     if (ref) {
-      const existing = watch('details') || ''
-      const note = `Interested in: ${ref}`
-      if (!existing.includes(note)) {
-        setValue('details', existing ? `${note}\n${existing}` : note)
-      }
+      const lines = [`Interested in: ${ref}`]
+      if (price) lines.push(`Price: ${price}`)
+      if (location) lines.push(`Location: ${location}`)
+      if (tags) lines.push(`Features: ${tags}`)
+      setValue('details', lines.join('\n'))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue])
@@ -119,6 +126,7 @@ export function RequestForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <Input
         label="Your name"
+        required
         placeholder="John Smith"
         error={errors.name?.message}
         {...register('name')}
@@ -186,6 +194,7 @@ export function RequestForm() {
           )}
         />
         <Input
+          required
           label={
             contactPref === 'whatsapp' ? 'WhatsApp number (with country code)' :
             contactPref === 'email' ? 'Email address' :

@@ -9,8 +9,11 @@ import {
   Search, Menu, LogOut, Bell, BookOpen, type LucideIcon,
 } from 'lucide-react'
 import { GuidesTab } from './guides-tab'
+import { HousingTab } from './housing-tab'
+import { MotorbikeTab } from './motorbike-tab'
+import { Home, Bike } from 'lucide-react'
 
-type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats' | 'guides'
+type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats' | 'guides' | 'housing' | 'motorbike'
 
 const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[] }[] = [
   { group: 'Main', items: [{ id: 'overview', label: 'Overview', icon: LayoutDashboard }] },
@@ -24,6 +27,13 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
     ],
   },
   {
+    group: 'Bất động sản',
+    items: [
+      { id: 'housing', label: 'Nhà cho thuê', icon: Home },
+      { id: 'motorbike', label: 'Motorbike rental', icon: Bike },
+    ],
+  },
+  {
     group: 'Content',
     items: [{ id: 'guides', label: 'Guides', icon: BookOpen }],
   },
@@ -33,6 +43,8 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
 const TITLES: Record<Tab, string> = {
   overview: 'Overview', requests: 'Service requests', partners: 'Partners',
   listings: 'Listings', reviews: 'Reviews', stats: 'Site stats', guides: 'Guides',
+  housing: 'Nhà cho thuê — Housing Listings',
+  motorbike: 'Motorbike Rental Listings',
 }
 
 export default function AdminPage() {
@@ -133,6 +145,8 @@ export default function AdminPage() {
           {tab === 'reviews' && <ReviewsTab />}
           {tab === 'stats' && <StatsTab />}
           {tab === 'guides' && <GuidesTab />}
+          {tab === 'housing' && <HousingTab />}
+          {tab === 'motorbike' && <MotorbikeTab />}
         </main>
       </div>
     </div>
