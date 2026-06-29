@@ -30,7 +30,7 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
   {
     group: 'Listing',
     items: [
-      { id: 'housing', label: 'Nhà cho thuê', icon: Home },
+      { id: 'housing', label: 'Housing Rental', icon: Home },
       { id: 'motorbike', label: 'Motorbike rental', icon: Bike },
       { id: 'listing-airport-transfer', label: 'Airport Transfer', icon: Plane },
       { id: 'listing-bank-account', label: 'Bank Account', icon: Landmark },
