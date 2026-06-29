@@ -5,15 +5,17 @@ import { ServiceRequest, Listing, Review, SiteStat, Partner } from '@/types'
 import { SERVICES } from '@/lib/services'
 import { clsx } from 'clsx'
 import {
-  LayoutDashboard, Inbox, Users, ClipboardList, Star, SlidersHorizontal,
-  Search, Menu, LogOut, Bell, BookOpen, Plus, X, Trash2, type LucideIcon,
+  LayoutDashboard, Inbox, Users, Star, SlidersHorizontal,
+  Search, Menu, LogOut, Bell, BookOpen, Plus, X, Trash2,
+  Home, Bike, Plane, Landmark, FileText, Languages, ClipboardList, type LucideIcon,
 } from 'lucide-react'
 import { GuidesTab } from './guides-tab'
 import { HousingTab } from './housing-tab'
 import { MotorbikeTab } from './motorbike-tab'
-import { Home, Bike } from 'lucide-react'
 
-type Tab = 'overview' | 'requests' | 'partners' | 'listings' | 'reviews' | 'stats' | 'guides' | 'housing' | 'motorbike'
+type Tab = 'overview' | 'requests' | 'partners' | 'reviews' | 'stats' | 'guides'
+  | 'housing' | 'motorbike'
+  | 'listing-airport-transfer' | 'listing-bank-account' | 'listing-visa-documents' | 'listing-translation'
 
 const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[] }[] = [
   { group: 'Main', items: [{ id: 'overview', label: 'Overview', icon: LayoutDashboard }] },
@@ -22,15 +24,18 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
     items: [
       { id: 'requests', label: 'Requests', icon: Inbox },
       { id: 'partners', label: 'Partners', icon: Users },
-      { id: 'listings', label: 'Listings', icon: ClipboardList },
       { id: 'reviews', label: 'Reviews', icon: Star },
     ],
   },
   {
-    group: 'Bất động sản',
+    group: 'Listing',
     items: [
       { id: 'housing', label: 'Nhà cho thuê', icon: Home },
       { id: 'motorbike', label: 'Motorbike rental', icon: Bike },
+      { id: 'listing-airport-transfer', label: 'Airport Transfer', icon: Plane },
+      { id: 'listing-bank-account', label: 'Bank Account', icon: Landmark },
+      { id: 'listing-visa-documents', label: 'Visa & Documents', icon: FileText },
+      { id: 'listing-translation', label: 'Translation', icon: Languages },
     ],
   },
   {
@@ -42,9 +47,13 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
 
 const TITLES: Record<Tab, string> = {
   overview: 'Overview', requests: 'Service requests', partners: 'Partners',
-  listings: 'Listings', reviews: 'Reviews', stats: 'Site stats', guides: 'Guides',
-  housing: 'Nhà cho thuê — Housing Listings',
+  reviews: 'Reviews', stats: 'Site stats', guides: 'Guides',
+  housing: 'Housing Listings',
   motorbike: 'Motorbike Rental Listings',
+  'listing-airport-transfer': 'Airport Transfer Listings',
+  'listing-bank-account': 'Bank Account Setup Listings',
+  'listing-visa-documents': 'Visa & Documents Listings',
+  'listing-translation': 'Translation Services Listings',
 }
 
 export default function AdminPage() {
@@ -141,12 +150,15 @@ export default function AdminPage() {
           {tab === 'overview' && <OverviewTab onGo={go} />}
           {tab === 'requests' && <RequestsTab />}
           {tab === 'partners' && <PartnersTab />}
-          {tab === 'listings' && <ListingsTab />}
           {tab === 'reviews' && <ReviewsTab />}
           {tab === 'stats' && <StatsTab />}
           {tab === 'guides' && <GuidesTab />}
           {tab === 'housing' && <HousingTab />}
           {tab === 'motorbike' && <MotorbikeTab />}
+          {tab === 'listing-airport-transfer' && <ServiceListingsTab serviceSlug="airport-transfer" />}
+          {tab === 'listing-bank-account' && <ServiceListingsTab serviceSlug="bank-account" />}
+          {tab === 'listing-visa-documents' && <ServiceListingsTab serviceSlug="visa-documents" />}
+          {tab === 'listing-translation' && <ServiceListingsTab serviceSlug="translation" />}
         </main>
       </div>
     </div>
@@ -225,7 +237,7 @@ function OverviewTab({ onGo }: { onGo: (t: Tab) => void }) {
             </button>
           )}
           {counts.submittedListings > 0 && (
-            <button onClick={() => onGo('listings')} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-full hover:bg-amber-100">
+            <button onClick={() => onGo('listing-airport-transfer')} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-full hover:bg-amber-100">
               {counts.submittedListings} listing{counts.submittedListings > 1 ? 's' : ''} to approve →
             </button>
           )}
@@ -1095,7 +1107,7 @@ function LocationSelect({ value, onChange }: { value: string; onChange: (v: stri
   )
 }
 
-function ListingsTab() {
+function ServiceListingsTab({ serviceSlug }: { serviceSlug: string }) {
   const supabase = useMemo(() => createClient(), [])
   const [listings, setListings] = useState<Listing[]>([])
   const [editing, setEditing] = useState<Partial<Listing> | null>(null)
@@ -1106,14 +1118,15 @@ function ListingsTab() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
-    const { data } = await supabase.from('listings').select('*').order('sort_order')
+    const { data } = await supabase.from('listings').select('*')
+      .eq('service_slug', serviceSlug).order('sort_order')
     setListings(data || [])
-  }, [supabase])
+  }, [supabase, serviceSlug])
 
   useEffect(() => { load() }, [load])
 
   const openNew = () => {
-    setEditing({ active: true, verified: false, sort_order: 0, service_slug: '' })
+    setEditing({ active: true, verified: false, sort_order: 0, service_slug: serviceSlug })
     setImageFile(null)
     setImagePreview('')
     setSaveError('')
@@ -1201,7 +1214,7 @@ function ListingsTab() {
     load()
   }
 
-  const cfg = editing?.service_slug ? SERVICE_CFG[editing.service_slug] : null
+  const cfg = SERVICE_CFG[serviceSlug] ?? null
 
   return (
     <div>
@@ -1214,22 +1227,8 @@ function ListingsTab() {
       {editing && (
         <div className="border border-[#E5E7EB] rounded-xl p-6 mb-6 bg-white space-y-5">
 
-          {/* Step 1 — Service selector */}
-          <div className="flex flex-wrap items-end gap-4">
-            <div>
-              <label className="text-xs font-medium text-gray-500 mb-1.5 block uppercase tracking-wide">Service</label>
-              <select
-                value={editing.service_slug || ''}
-                onChange={e => setEditing(prev => ({ ...prev, service_slug: e.target.value }))}
-                className="w-full sm:w-72 border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1D9E75] bg-white"
-              >
-                <option value="">— Select a service —</option>
-                {SERVICES.filter(s => SERVICE_CFG[s.slug]).map(s => (
-                  <option key={s.slug} value={s.slug}>{s.title}</option>
-                ))}
-              </select>
-              <p className="text-[11px] text-gray-400 mt-1">Housing &amp; Motorbike are managed in dedicated tabs.</p>
-            </div>
+          {/* Sort order */}
+          <div className="flex items-end gap-4">
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1.5 block uppercase tracking-wide">Sort order</label>
               <input
@@ -1241,7 +1240,6 @@ function ListingsTab() {
             </div>
           </div>
 
-          {/* Fields — only show once a service is selected */}
           {cfg && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -1384,7 +1382,7 @@ function ListingsTab() {
           <div className="flex gap-3 pt-1">
             <button
               onClick={save}
-              disabled={uploading || !editing.service_slug}
+              disabled={uploading}
               className="bg-[#1D9E75] text-white text-sm px-5 py-2 rounded-full hover:bg-[#0F6E56] disabled:opacity-50"
             >
               {uploading ? 'Saving…' : 'Save listing'}
@@ -1404,7 +1402,6 @@ function ListingsTab() {
           <thead>
             <tr className="border-b border-[#E5E7EB] text-left">
               <th className="pb-3 font-medium text-gray-500">Title</th>
-              <th className="pb-3 font-medium text-gray-500">Service</th>
               <th className="pb-3 font-medium text-gray-500">Price</th>
               <th className="pb-3 font-medium text-gray-500">Status</th>
               <th className="pb-3 font-medium text-gray-500">Verified</th>
@@ -1414,12 +1411,11 @@ function ListingsTab() {
           </thead>
           <tbody>
             {listings.length === 0 && (
-              <tr><td colSpan={7} className="py-8 text-center text-gray-400 text-sm">No listings yet</td></tr>
+              <tr><td colSpan={6} className="py-8 text-center text-gray-400 text-sm">No listings yet</td></tr>
             )}
             {listings.map(l => (
               <tr key={l.id} className="border-b border-[#E5E7EB]">
                 <td className="py-3 font-medium">{l.title}</td>
-                <td className="py-3 text-gray-500 text-xs">{SERVICES.find(s => s.slug === l.service_slug)?.title ?? l.service_slug}</td>
                 <td className="py-3 text-gray-500">{l.price ? `$${l.price}` : '—'}</td>
                 <td className="py-3">
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium',
