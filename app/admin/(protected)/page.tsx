@@ -344,6 +344,9 @@ function ServiceRequestsPanel() {
   const [requests, setRequests] = useState<ServiceRequest[]>([])
   const [partners, setPartners] = useState<Record<string, string>>({})
   const [selected, setSelected] = useState<ServiceRequest | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [editForm, setEditForm] = useState<Partial<ServiceRequest>>({})
+  const [saving, setSaving] = useState(false)
 
   const load = useCallback(async () => {
     const [{ data: reqs }, { data: prts }] = await Promise.all([
@@ -377,6 +380,32 @@ function ServiceRequestsPanel() {
     load()
   }
 
+  const openEdit = (r: ServiceRequest) => {
+    setEditForm({
+      name: r.name,
+      contact_pref: r.contact_pref,
+      contact_value: r.contact_value,
+      timeline: r.timeline,
+      details: r.details || '',
+      admin_notes: r.admin_notes || '',
+      quote: r.quote || '',
+    })
+    setEditing(true)
+  }
+
+  const saveEdit = async () => {
+    if (!selected) return
+    setSaving(true)
+    const { error } = await supabase.from('service_requests').update(editForm).eq('id', selected.id)
+    if (!error) {
+      const updated = { ...selected, ...editForm } as ServiceRequest
+      setSelected(updated)
+      setEditing(false)
+      load()
+    }
+    setSaving(false)
+  }
+
   const STATUS_COLORS: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700',
     'in-progress': 'bg-amber-100 text-amber-700',
@@ -404,7 +433,7 @@ function ServiceRequestsPanel() {
             {requests.map(r => (
               <tr
                 key={r.id}
-                onClick={() => setSelected(r)}
+                onClick={() => { setSelected(r); setEditing(false) }}
                 className={clsx(
                   'border-b border-[#f3f5f9] last:border-0 cursor-pointer transition-colors',
                   selected?.id === r.id ? 'bg-[#f0fdf9]' : 'hover:bg-[#f9fafc]'
@@ -441,50 +470,143 @@ function ServiceRequestsPanel() {
         <div className="bg-white border border-[#edf0f5] shadow-sm rounded-xl p-6 space-y-4 h-fit">
           <div className="flex items-start justify-between">
             <h2 className="font-semibold text-gray-900">{selected.name}</h2>
-            <button onClick={() => setSelected(null)} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
-          </div>
-          <div className="text-sm space-y-2">
-            <p><span className="text-gray-400">Services:</span> {selected.services.join(', ')}</p>
-            <p><span className="text-gray-400">Timeline:</span> {selected.timeline}</p>
-            <p><span className="text-gray-400">Contact:</span> {selected.contact_pref} — {selected.contact_value}</p>
-            {selected.details && <p><span className="text-gray-400">Details:</span> {selected.details}</p>}
-            {selected.quote && <p><span className="text-gray-400">Quote:</span> {selected.quote}</p>}
-            {selected.partner_notes && <p><span className="text-gray-400">Partner notes:</span> {selected.partner_notes}</p>}
-            <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
-          </div>
-          <div className="border-t border-[#E5E7EB] pt-4">
-            <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Assignment</p>
-            <div className="flex items-center gap-3">
-              <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', ASSIGN_COLORS[selected.assignment_status])}>
-                {selected.assignment_status}
-              </span>
-              {selected.assigned_partner_id && (
-                <span className="text-sm text-gray-600">{partners[selected.assigned_partner_id] || '—'}</span>
-              )}
-              {selected.assigned_partner_id && selected.assignment_status !== 'completed' && (
-                <button onClick={() => reclaim(selected.id)} className="ml-auto text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded-full hover:bg-red-50">
-                  Return to pool
+            <div className="flex items-center gap-2">
+              {!editing && (
+                <button onClick={() => openEdit(selected)} className="text-xs text-[#1D9E75] border border-[#1D9E75]/30 px-2.5 py-1 rounded-full hover:bg-[#f0fdf9]">
+                  Edit
                 </button>
               )}
+              <button onClick={() => { setSelected(null); setEditing(false) }} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
             </div>
           </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Update status</p>
-            <div className="flex gap-2">
-              {(['new', 'in-progress', 'done'] as const).map(s => (
-                <button
-                  key={s}
-                  onClick={() => updateStatus(selected.id, s)}
-                  className={clsx(
-                    'text-xs px-3 py-1.5 rounded-full border transition-colors',
-                    selected.status === s ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+
+          {editing ? (
+            <div className="space-y-3 text-sm">
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Name</label>
+                <input
+                  value={editForm.name || ''}
+                  onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Contact via</label>
+                  <select
+                    value={editForm.contact_pref || ''}
+                    onChange={e => setEditForm(f => ({ ...f, contact_pref: e.target.value as ServiceRequest['contact_pref'] }))}
+                    className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75] bg-white"
+                  >
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="email">Email</option>
+                    <option value="telegram">Telegram</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Contact value</label>
+                  <input
+                    value={editForm.contact_value || ''}
+                    onChange={e => setEditForm(f => ({ ...f, contact_value: e.target.value }))}
+                    className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Timeline</label>
+                <input
+                  value={editForm.timeline || ''}
+                  onChange={e => setEditForm(f => ({ ...f, timeline: e.target.value }))}
+                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Details</label>
+                <textarea
+                  rows={3}
+                  value={editForm.details || ''}
+                  onChange={e => setEditForm(f => ({ ...f, details: e.target.value }))}
+                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75] resize-none"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Quote / agreed price</label>
+                <input
+                  value={editForm.quote || ''}
+                  onChange={e => setEditForm(f => ({ ...f, quote: e.target.value }))}
+                  placeholder="e.g. $150/month"
+                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Admin notes</label>
+                <textarea
+                  rows={2}
+                  value={editForm.admin_notes || ''}
+                  onChange={e => setEditForm(f => ({ ...f, admin_notes: e.target.value }))}
+                  placeholder="Internal notes after customer call…"
+                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75] resize-none"
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button onClick={saveEdit} disabled={saving} className="bg-[#1D9E75] text-white text-xs px-4 py-1.5 rounded-full hover:bg-[#0F6E56] disabled:opacity-50">
+                  {saving ? 'Saving…' : 'Save changes'}
+                </button>
+                <button onClick={() => setEditing(false)} className="border border-[#D1D5DB] text-gray-600 text-xs px-4 py-1.5 rounded-full hover:bg-gray-50">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm space-y-2">
+              <p><span className="text-gray-400">Services:</span> {selected.services.join(', ')}</p>
+              <p><span className="text-gray-400">Timeline:</span> {selected.timeline}</p>
+              <p><span className="text-gray-400">Contact:</span> {selected.contact_pref} — {selected.contact_value}</p>
+              {selected.details && <p><span className="text-gray-400">Details:</span> {selected.details}</p>}
+              {selected.quote && <p><span className="text-gray-400">Quote:</span> {selected.quote}</p>}
+              {selected.admin_notes && <p><span className="text-gray-400">Admin notes:</span> {selected.admin_notes}</p>}
+              {selected.partner_notes && <p><span className="text-gray-400">Partner notes:</span> {selected.partner_notes}</p>}
+              <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
+            </div>
+          )}
+
+          {!editing && (
+            <>
+              <div className="border-t border-[#E5E7EB] pt-4">
+                <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Assignment</p>
+                <div className="flex items-center gap-3">
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', ASSIGN_COLORS[selected.assignment_status])}>
+                    {selected.assignment_status}
+                  </span>
+                  {selected.assigned_partner_id && (
+                    <span className="text-sm text-gray-600">{partners[selected.assigned_partner_id] || '—'}</span>
                   )}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
+                  {selected.assigned_partner_id && selected.assignment_status !== 'completed' && (
+                    <button onClick={() => reclaim(selected.id)} className="ml-auto text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded-full hover:bg-red-50">
+                      Return to pool
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Update status</p>
+                <div className="flex gap-2">
+                  {(['new', 'in-progress', 'done'] as const).map(s => (
+                    <button
+                      key={s}
+                      onClick={() => updateStatus(selected.id, s)}
+                      className={clsx(
+                        'text-xs px-3 py-1.5 rounded-full border transition-colors',
+                        selected.status === s ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+                      )}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
