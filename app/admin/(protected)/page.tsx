@@ -6,7 +6,7 @@ import { SERVICES } from '@/lib/services'
 import { clsx } from 'clsx'
 import {
   LayoutDashboard, Inbox, Users, ClipboardList, Star, SlidersHorizontal,
-  Search, Menu, LogOut, Bell, BookOpen, Plus, X, type LucideIcon,
+  Search, Menu, LogOut, Bell, BookOpen, Plus, X, Trash2, type LucideIcon,
 } from 'lucide-react'
 import { GuidesTab } from './guides-tab'
 import { HousingTab } from './housing-tab'
@@ -370,6 +370,13 @@ function ServiceRequestsPanel() {
     load()
   }
 
+  const deleteRequest = async (id: string) => {
+    if (!confirm('Delete this request? This cannot be undone.')) return
+    await supabase.from('service_requests').delete().eq('id', id)
+    if (selected?.id === id) setSelected(null)
+    load()
+  }
+
   const STATUS_COLORS: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700',
     'in-progress': 'bg-amber-100 text-amber-700',
@@ -387,11 +394,12 @@ function ServiceRequestsPanel() {
               <th className="px-5 py-3 font-medium">Services</th>
               <th className="px-5 py-3 font-medium">Assigned</th>
               <th className="px-5 py-3 font-medium">Status</th>
+              <th className="px-5 py-3 font-medium"></th>
             </tr>
           </thead>
           <tbody>
             {requests.length === 0 && (
-              <tr><td colSpan={5} className="px-5 py-10 text-center text-gray-400 text-sm">No requests yet</td></tr>
+              <tr><td colSpan={6} className="px-5 py-10 text-center text-gray-400 text-sm">No requests yet</td></tr>
             )}
             {requests.map(r => (
               <tr
@@ -417,6 +425,11 @@ function ServiceRequestsPanel() {
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', STATUS_COLORS[r.status])}>
                     {r.status}
                   </span>
+                </td>
+                <td className="px-5 py-3" onClick={e => e.stopPropagation()}>
+                  <button onClick={() => deleteRequest(r.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -503,6 +516,13 @@ function HousingInquiriesPanel() {
     setSelected(prev => prev?.id === id ? { ...prev, assigned_to } : prev)
   }
 
+  const deleteInquiry = async (id: string) => {
+    if (!confirm('Delete this inquiry? This cannot be undone.')) return
+    await supabase.from('housing_inquiries').delete().eq('id', id)
+    if (selected?.id === id) setSelected(null)
+    load()
+  }
+
   if (loading) return <p className="text-sm text-gray-400 py-8 text-center">Loading…</p>
 
   return (
@@ -517,11 +537,12 @@ function HousingInquiriesPanel() {
               <th className="px-5 py-3 font-medium">Contact</th>
               <th className="px-5 py-3 font-medium">Assigned</th>
               <th className="px-5 py-3 font-medium">Status</th>
+              <th className="px-5 py-3 font-medium"></th>
             </tr>
           </thead>
           <tbody>
             {inquiries.length === 0 && (
-              <tr><td colSpan={6} className="px-5 py-10 text-center text-gray-400 text-sm">No housing inquiries yet</td></tr>
+              <tr><td colSpan={7} className="px-5 py-10 text-center text-gray-400 text-sm">No housing inquiries yet</td></tr>
             )}
             {inquiries.map(r => (
               <tr
@@ -541,6 +562,11 @@ function HousingInquiriesPanel() {
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', INQUIRY_STATUS_COLORS[r.status || 'new'])}>
                     {r.status || 'new'}
                   </span>
+                </td>
+                <td className="px-5 py-3" onClick={e => e.stopPropagation()}>
+                  <button onClick={() => deleteInquiry(r.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -621,6 +647,13 @@ function MotorbikeInquiriesPanel() {
     setSelected(prev => prev?.id === id ? { ...prev, assigned_to } : prev)
   }
 
+  const deleteInquiry = async (id: string) => {
+    if (!confirm('Delete this inquiry? This cannot be undone.')) return
+    await supabase.from('motorbike_inquiries').delete().eq('id', id)
+    if (selected?.id === id) setSelected(null)
+    load()
+  }
+
   if (loading) return <p className="text-sm text-gray-400 py-8 text-center">Loading…</p>
 
   return (
@@ -636,11 +669,12 @@ function MotorbikeInquiriesPanel() {
               <th className="px-5 py-3 font-medium">Delivery</th>
               <th className="px-5 py-3 font-medium">Assigned</th>
               <th className="px-5 py-3 font-medium">Status</th>
+              <th className="px-5 py-3 font-medium"></th>
             </tr>
           </thead>
           <tbody>
             {inquiries.length === 0 && (
-              <tr><td colSpan={7} className="px-5 py-10 text-center text-gray-400 text-sm">No motorbike inquiries yet</td></tr>
+              <tr><td colSpan={8} className="px-5 py-10 text-center text-gray-400 text-sm">No motorbike inquiries yet</td></tr>
             )}
             {inquiries.map(r => (
               <tr
@@ -661,6 +695,11 @@ function MotorbikeInquiriesPanel() {
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', INQUIRY_STATUS_COLORS[r.status || 'new'])}>
                     {r.status || 'new'}
                   </span>
+                </td>
+                <td className="px-5 py-3" onClick={e => e.stopPropagation()}>
+                  <button onClick={() => deleteInquiry(r.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -768,6 +807,12 @@ function PartnersTab() {
     load()
   }
 
+  const deletePartner = async (id: string) => {
+    if (!confirm('Delete this partner? This cannot be undone.')) return
+    await supabase.from('partners').delete().eq('id', id)
+    load()
+  }
+
   return (
     <div>
       <div className="flex justify-end mb-4">
@@ -839,6 +884,9 @@ function PartnersTab() {
                 </span>
                 <button onClick={() => toggleStatus(p)} className="text-xs text-gray-500 hover:text-gray-900">
                   {p.status === 'active' ? 'Suspend' : 'Activate'}
+                </button>
+                <button onClick={() => deletePartner(p.id)} className="text-gray-300 hover:text-red-500 transition-colors ml-1">
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>
@@ -1021,6 +1069,13 @@ function ListingsTab() {
 
   const toggle = async (id: string, field: 'active' | 'verified', val: boolean) => {
     await supabase.from('listings').update({ [field]: val }).eq('id', id)
+    load()
+  }
+
+  const deleteListing = async (id: string) => {
+    if (!confirm('Delete this listing? This cannot be undone.')) return
+    await supabase.from('listings').delete().eq('id', id)
+    if (editing && (editing as Listing).id === id) { setEditing(null); setImageFile(null); setImagePreview('') }
     load()
   }
 
@@ -1266,7 +1321,12 @@ function ListingsTab() {
                   <input type="checkbox" checked={l.active} onChange={e => toggle(l.id, 'active', e.target.checked)} className="accent-[#1D9E75]" />
                 </td>
                 <td className="py-3">
-                  <button onClick={() => openEdit(l)} className="text-xs text-[#1D9E75] hover:underline">Edit</button>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => openEdit(l)} className="text-xs text-[#1D9E75] hover:underline">Edit</button>
+                    <button onClick={() => deleteListing(l.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -1293,6 +1353,12 @@ function ReviewsTab() {
     load()
   }
 
+  const deleteReview = async (id: string) => {
+    if (!confirm('Delete this review? This cannot be undone.')) return
+    await supabase.from('reviews').delete().eq('id', id)
+    load()
+  }
+
   return (
     <div className="space-y-4">
       {reviews.length === 0 && (
@@ -1307,14 +1373,19 @@ function ReviewsTab() {
               <p className="text-xs font-medium text-gray-900">{r.author_name}</p>
               {r.author_info && <p className="text-xs text-gray-400">{r.author_info}</p>}
             </div>
-            <span className={clsx(
-              'text-xs px-2 py-0.5 rounded-full font-medium ml-4 flex-shrink-0',
-              r.status === 'approved' ? 'bg-green-100 text-green-700' :
-              r.status === 'rejected' ? 'bg-red-100 text-red-600' :
-              'bg-amber-100 text-amber-700'
-            )}>
-              {r.status}
-            </span>
+            <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+              <span className={clsx(
+                'text-xs px-2 py-0.5 rounded-full font-medium',
+                r.status === 'approved' ? 'bg-green-100 text-green-700' :
+                r.status === 'rejected' ? 'bg-red-100 text-red-600' :
+                'bg-amber-100 text-amber-700'
+              )}>
+                {r.status}
+              </span>
+              <button onClick={() => deleteReview(r.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                <Trash2 size={14} />
+              </button>
+            </div>
           </div>
           {r.status === 'pending' && (
             <div className="flex gap-2 mt-4">
