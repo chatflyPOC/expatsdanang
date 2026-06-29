@@ -8,7 +8,7 @@ import {
 import { clsx } from 'clsx'
 import {
   Plus, X, Upload, Video, Eye, Pencil, ChevronDown, ChevronUp,
-  Image as ImageIcon, Loader2, ToggleLeft, ToggleRight,
+  Image as ImageIcon, Loader2, ToggleLeft, ToggleRight, Trash2,
 } from 'lucide-react'
 
 // ── Admin-extended type ──────────────────────────────────────────────────────
@@ -267,6 +267,13 @@ export function MotorbikeTab() {
   const toggleStatus = async (id: string, current: MotorbikeStatus) => {
     const next: MotorbikeStatus = current === 'available' ? 'hidden' : 'available'
     await supabase.from('motorbike_listings').update({ status: next }).eq('id', id)
+    load()
+  }
+
+  const deleteListing = async (id: string) => {
+    if (!confirm('Delete this listing? This cannot be undone.')) return
+    await supabase.from('motorbike_listings').delete().eq('id', id)
+    if (editing && (editing as FullListing).id === id) setEditing(null)
     load()
   }
 
@@ -600,9 +607,14 @@ export function MotorbikeTab() {
                         </button>
                       </td>
                       <td className="px-4 py-3">
-                        <button onClick={() => openEdit(l)} className="flex items-center gap-1 text-xs text-[#1D9E75] hover:underline">
-                          <Pencil size={12} /> Edit
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => openEdit(l)} className="flex items-center gap-1 text-xs text-[#1D9E75] hover:underline">
+                            <Pencil size={12} /> Edit
+                          </button>
+                          <button onClick={() => deleteListing(l.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )
