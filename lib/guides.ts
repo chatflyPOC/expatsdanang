@@ -76,6 +76,66 @@ export const GUIDES: GuideMeta[] = [
     readTime: '6 min read',
     updated: 'June 2025',
   },
+  {
+    slug: 'apartment-for-rent-da-nang',
+    title: 'Apartment for Rent in Da Nang: 2026 Guide for Expats',
+    excerpt:
+      'Everything you need to find and rent an apartment in Da Nang as a foreigner — neighborhoods, prices, what to watch out for, and how to get a fair deal.',
+    category: 'Housing',
+    readTime: '8 min read',
+    updated: 'June 2026',
+    service: 'housing',
+  },
+  {
+    slug: 'house-for-rent-da-nang',
+    title: 'House for Rent in Da Nang: 2026 Guide for Expats',
+    excerpt:
+      'Looking for a house to rent in Da Nang? Prices, best areas, what to look for, and how to find a house that actually matches the photos.',
+    category: 'Housing',
+    readTime: '6 min read',
+    updated: 'June 2026',
+    service: 'housing',
+  },
+  {
+    slug: 'furnished-apartment-da-nang-long-term',
+    title: 'Furnished Apartment Da Nang: Long-Term Rental Guide (2026)',
+    excerpt:
+      'How to find the right furnished apartment in Da Nang for a long-term stay — what\'s included, how to negotiate, and which areas offer the best value.',
+    category: 'Housing',
+    readTime: '7 min read',
+    updated: 'June 2026',
+    service: 'housing',
+  },
+  {
+    slug: 'motorbike-rental-da-nang',
+    title: 'Motorbike Rental Da Nang: Complete 2026 Guide',
+    excerpt:
+      'How to rent a motorbike in Da Nang — prices, best rental shops, what documents you need, insurance, and tips for riding safely as a foreigner.',
+    category: 'Transport',
+    readTime: '7 min read',
+    updated: 'June 2026',
+    service: 'motorbike-rental',
+  },
+  {
+    slug: 'scooter-rental-da-nang',
+    title: 'Scooter Rental Da Nang: What to Know Before You Ride',
+    excerpt:
+      'Renting a scooter in Da Nang is easy and affordable — if you know what to look for. Prices, best bikes, licence rules and practical riding tips for expats.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'June 2026',
+    service: 'motorbike-rental',
+  },
+  {
+    slug: 'monthly-motorbike-rental-da-nang',
+    title: 'Monthly Motorbike Rental Da Nang: Expat Guide (2026)',
+    excerpt:
+      'Renting a motorbike by the month in Da Nang saves 30–40% vs daily rates. Prices, best bikes, what\'s included, and how to get the best deal.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'June 2026',
+    service: 'motorbike-rental',
+  },
 ]
 
 export const CATEGORY_COLORS: Record<GuideCategory, string> = {
