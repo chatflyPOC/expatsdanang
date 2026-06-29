@@ -286,7 +286,60 @@ const ASSIGN_COLORS: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-600',
 }
 
+// ── Types for housing & motorbike inquiries ──────────────────────────────────
+type InquiryStatus = 'new' | 'in-progress' | 'done'
+
+type HousingInquiry = {
+  id: string; created_at: string; listing_id: string; listing_title: string
+  name: string; contact_channel: string; contact_value: string
+  rental_duration?: string | null; preferred_viewing_date?: string | null; message?: string | null
+  status?: InquiryStatus; assigned_to?: string | null
+}
+type MotorbikeInquiry = {
+  id: string; created_at: string; listing_id: string; listing_title: string
+  name: string; contact_channel: string; contact_value: string
+  start_date?: string | null; duration_days?: number | null
+  delivery_method: string; delivery_address?: string | null; message?: string | null
+  status?: InquiryStatus; assigned_to?: string | null
+}
+
+const INQUIRY_STATUS_COLORS: Record<string, string> = {
+  new: 'bg-blue-100 text-blue-700',
+  'in-progress': 'bg-amber-100 text-amber-700',
+  done: 'bg-green-100 text-green-700',
+}
+
 function RequestsTab() {
+  const [subTab, setSubTab] = useState<'service' | 'housing' | 'motorbike'>('service')
+
+  return (
+    <div className="space-y-4">
+      {/* Sub-tab switcher */}
+      <div className="flex gap-2 border-b border-[#edf0f5] pb-3">
+        {(['service', 'housing', 'motorbike'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setSubTab(t)}
+            className={clsx(
+              'text-sm px-4 py-1.5 rounded-full border transition-colors',
+              subTab === t
+                ? 'bg-[#1D9E75] text-white border-[#1D9E75]'
+                : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+            )}
+          >
+            {t === 'service' ? 'Service requests' : t === 'housing' ? 'Housing inquiries' : 'Motorbike inquiries'}
+          </button>
+        ))}
+      </div>
+
+      {subTab === 'service' && <ServiceRequestsPanel />}
+      {subTab === 'housing' && <HousingInquiriesPanel />}
+      {subTab === 'motorbike' && <MotorbikeInquiriesPanel />}
+    </div>
+  )
+}
+
+function ServiceRequestsPanel() {
   const supabase = useMemo(() => createClient(), [])
   const [requests, setRequests] = useState<ServiceRequest[]>([])
   const [partners, setPartners] = useState<Record<string, string>>({})
@@ -309,7 +362,6 @@ function RequestsTab() {
     load()
   }
 
-  // Admin override: pull a stuck/claimed request back into the open pool
   const reclaim = async (id: string) => {
     await supabase.from('service_requests')
       .update({ assignment_status: 'pool', assigned_partner_id: null, claimed_at: null })
@@ -387,7 +439,6 @@ function RequestsTab() {
             {selected.partner_notes && <p><span className="text-gray-400">Partner notes:</span> {selected.partner_notes}</p>}
             <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
           </div>
-
           <div className="border-t border-[#E5E7EB] pt-4">
             <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Assignment</p>
             <div className="flex items-center gap-3">
@@ -398,16 +449,12 @@ function RequestsTab() {
                 <span className="text-sm text-gray-600">{partners[selected.assigned_partner_id] || '—'}</span>
               )}
               {selected.assigned_partner_id && selected.assignment_status !== 'completed' && (
-                <button
-                  onClick={() => reclaim(selected.id)}
-                  className="ml-auto text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded-full hover:bg-red-50"
-                >
+                <button onClick={() => reclaim(selected.id)} className="ml-auto text-xs border border-red-200 text-red-600 px-3 py-1.5 rounded-full hover:bg-red-50">
                   Return to pool
                 </button>
               )}
             </div>
           </div>
-
           <div>
             <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Update status</p>
             <div className="flex gap-2">
@@ -417,14 +464,251 @@ function RequestsTab() {
                   onClick={() => updateStatus(selected.id, s)}
                   className={clsx(
                     'text-xs px-3 py-1.5 rounded-full border transition-colors',
-                    selected.status === s
-                      ? 'bg-[#1D9E75] text-white border-[#1D9E75]'
-                      : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+                    selected.status === s ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
                   )}
                 >
                   {s}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function HousingInquiriesPanel() {
+  const supabase = useMemo(() => createClient(), [])
+  const [inquiries, setInquiries] = useState<HousingInquiry[]>([])
+  const [selected, setSelected] = useState<HousingInquiry | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from('housing_inquiries').select('*').order('created_at', { ascending: false })
+    setInquiries((data as HousingInquiry[]) || [])
+    setLoading(false)
+  }, [supabase])
+
+  useEffect(() => { load() }, [load])
+
+  const updateStatus = async (id: string, status: InquiryStatus) => {
+    await supabase.from('housing_inquiries').update({ status }).eq('id', id)
+    setSelected(prev => prev?.id === id ? { ...prev, status } : prev)
+    load()
+  }
+
+  const updateAssigned = async (id: string, assigned_to: string) => {
+    await supabase.from('housing_inquiries').update({ assigned_to }).eq('id', id)
+    setSelected(prev => prev?.id === id ? { ...prev, assigned_to } : prev)
+  }
+
+  if (loading) return <p className="text-sm text-gray-400 py-8 text-center">Loading…</p>
+
+  return (
+    <div className={clsx('grid gap-6', selected ? 'lg:grid-cols-[1fr_360px]' : 'grid-cols-1')}>
+      <div className="bg-white rounded-xl border border-[#edf0f5] shadow-sm overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-gray-400 border-b border-[#edf0f5] bg-[#fafbfd]">
+              <th className="px-5 py-3 font-medium">Date</th>
+              <th className="px-5 py-3 font-medium">Name</th>
+              <th className="px-5 py-3 font-medium">Listing</th>
+              <th className="px-5 py-3 font-medium">Contact</th>
+              <th className="px-5 py-3 font-medium">Assigned</th>
+              <th className="px-5 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inquiries.length === 0 && (
+              <tr><td colSpan={6} className="px-5 py-10 text-center text-gray-400 text-sm">No housing inquiries yet</td></tr>
+            )}
+            {inquiries.map(r => (
+              <tr
+                key={r.id}
+                onClick={() => setSelected(r)}
+                className={clsx(
+                  'border-b border-[#f3f5f9] last:border-0 cursor-pointer transition-colors',
+                  selected?.id === r.id ? 'bg-[#f0fdf9]' : 'hover:bg-[#f9fafc]'
+                )}
+              >
+                <td className="px-5 py-3 text-gray-400 whitespace-nowrap text-xs">{new Date(r.created_at).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                <td className="px-5 py-3 font-medium text-gray-700">{r.name}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs max-w-[200px] truncate">{r.listing_title}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.contact_channel} · {r.contact_value}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.assigned_to || <span className="text-gray-300">—</span>}</td>
+                <td className="px-5 py-3">
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', INQUIRY_STATUS_COLORS[r.status || 'new'])}>
+                    {r.status || 'new'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <div className="bg-white border border-[#edf0f5] shadow-sm rounded-xl p-6 space-y-3 h-fit">
+          <div className="flex items-start justify-between">
+            <h2 className="font-semibold text-gray-900">{selected.name}</h2>
+            <button onClick={() => setSelected(null)} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
+          </div>
+          <div className="text-sm space-y-2">
+            <p><span className="text-gray-400">Listing:</span> {selected.listing_title}</p>
+            <p><span className="text-gray-400">Contact:</span> {selected.contact_channel} — <strong>{selected.contact_value}</strong></p>
+            {selected.rental_duration && <p><span className="text-gray-400">Duration:</span> {selected.rental_duration}</p>}
+            {selected.preferred_viewing_date && <p><span className="text-gray-400">Viewing date:</span> {selected.preferred_viewing_date}</p>}
+            {selected.message && <p><span className="text-gray-400">Message:</span> {selected.message}</p>}
+            <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
+          </div>
+          <div className="border-t border-[#E5E7EB] pt-4 space-y-3">
+            <div>
+              <p className="text-xs text-gray-400 mb-1.5 uppercase tracking-wide">Assigned to</p>
+              <input
+                defaultValue={selected.assigned_to || ''}
+                onBlur={e => updateAssigned(selected.id, e.target.value)}
+                placeholder="e.g. Nam"
+                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+              />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-1.5 uppercase tracking-wide">Update status</p>
+              <div className="flex gap-2">
+                {(['new', 'in-progress', 'done'] as InquiryStatus[]).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => updateStatus(selected.id, s)}
+                    className={clsx(
+                      'text-xs px-3 py-1.5 rounded-full border transition-colors',
+                      (selected.status || 'new') === s ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MotorbikeInquiriesPanel() {
+  const supabase = useMemo(() => createClient(), [])
+  const [inquiries, setInquiries] = useState<MotorbikeInquiry[]>([])
+  const [selected, setSelected] = useState<MotorbikeInquiry | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from('motorbike_inquiries').select('*').order('created_at', { ascending: false })
+    setInquiries((data as MotorbikeInquiry[]) || [])
+    setLoading(false)
+  }, [supabase])
+
+  useEffect(() => { load() }, [load])
+
+  const updateStatus = async (id: string, status: InquiryStatus) => {
+    await supabase.from('motorbike_inquiries').update({ status }).eq('id', id)
+    setSelected(prev => prev?.id === id ? { ...prev, status } : prev)
+    load()
+  }
+
+  const updateAssigned = async (id: string, assigned_to: string) => {
+    await supabase.from('motorbike_inquiries').update({ assigned_to }).eq('id', id)
+    setSelected(prev => prev?.id === id ? { ...prev, assigned_to } : prev)
+  }
+
+  if (loading) return <p className="text-sm text-gray-400 py-8 text-center">Loading…</p>
+
+  return (
+    <div className={clsx('grid gap-6', selected ? 'lg:grid-cols-[1fr_360px]' : 'grid-cols-1')}>
+      <div className="bg-white rounded-xl border border-[#edf0f5] shadow-sm overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-gray-400 border-b border-[#edf0f5] bg-[#fafbfd]">
+              <th className="px-5 py-3 font-medium">Date</th>
+              <th className="px-5 py-3 font-medium">Name</th>
+              <th className="px-5 py-3 font-medium">Bike</th>
+              <th className="px-5 py-3 font-medium">Contact</th>
+              <th className="px-5 py-3 font-medium">Delivery</th>
+              <th className="px-5 py-3 font-medium">Assigned</th>
+              <th className="px-5 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inquiries.length === 0 && (
+              <tr><td colSpan={7} className="px-5 py-10 text-center text-gray-400 text-sm">No motorbike inquiries yet</td></tr>
+            )}
+            {inquiries.map(r => (
+              <tr
+                key={r.id}
+                onClick={() => setSelected(r)}
+                className={clsx(
+                  'border-b border-[#f3f5f9] last:border-0 cursor-pointer transition-colors',
+                  selected?.id === r.id ? 'bg-[#f0fdf9]' : 'hover:bg-[#f9fafc]'
+                )}
+              >
+                <td className="px-5 py-3 text-gray-400 whitespace-nowrap text-xs">{new Date(r.created_at).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                <td className="px-5 py-3 font-medium text-gray-700">{r.name}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs max-w-[180px] truncate">{r.listing_title}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.contact_channel} · {r.contact_value}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.delivery_method === 'home_delivery' ? '🚚 Delivery' : '🏪 Pickup'}</td>
+                <td className="px-5 py-3 text-gray-500 text-xs">{r.assigned_to || <span className="text-gray-300">—</span>}</td>
+                <td className="px-5 py-3">
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', INQUIRY_STATUS_COLORS[r.status || 'new'])}>
+                    {r.status || 'new'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <div className="bg-white border border-[#edf0f5] shadow-sm rounded-xl p-6 space-y-3 h-fit">
+          <div className="flex items-start justify-between">
+            <h2 className="font-semibold text-gray-900">{selected.name}</h2>
+            <button onClick={() => setSelected(null)} className="text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
+          </div>
+          <div className="text-sm space-y-2">
+            <p><span className="text-gray-400">Bike:</span> {selected.listing_title}</p>
+            <p><span className="text-gray-400">Contact:</span> {selected.contact_channel} — <strong>{selected.contact_value}</strong></p>
+            {selected.start_date && <p><span className="text-gray-400">Start date:</span> {selected.start_date}</p>}
+            {selected.duration_days && <p><span className="text-gray-400">Duration:</span> {selected.duration_days} day{selected.duration_days > 1 ? 's' : ''}</p>}
+            <p><span className="text-gray-400">Delivery:</span> {selected.delivery_method === 'home_delivery' ? `Home delivery${selected.delivery_address ? ` → ${selected.delivery_address}` : ''}` : 'Store pickup'}</p>
+            {selected.message && <p><span className="text-gray-400">Message:</span> {selected.message}</p>}
+            <p className="text-xs text-gray-300">{new Date(selected.created_at).toLocaleString()}</p>
+          </div>
+          <div className="border-t border-[#E5E7EB] pt-4 space-y-3">
+            <div>
+              <p className="text-xs text-gray-400 mb-1.5 uppercase tracking-wide">Assigned to</p>
+              <input
+                defaultValue={selected.assigned_to || ''}
+                onBlur={e => updateAssigned(selected.id, e.target.value)}
+                placeholder="e.g. Nam"
+                className="w-full border border-[#E5E7EB] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#1D9E75]"
+              />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-1.5 uppercase tracking-wide">Update status</p>
+              <div className="flex gap-2">
+                {(['new', 'in-progress', 'done'] as InquiryStatus[]).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => updateStatus(selected.id, s)}
+                    className={clsx(
+                      'text-xs px-3 py-1.5 rounded-full border transition-colors',
+                      (selected.status || 'new') === s ? 'bg-[#1D9E75] text-white border-[#1D9E75]' : 'border-[#D1D5DB] text-gray-600 hover:bg-gray-50'
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
