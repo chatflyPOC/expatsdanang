@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Storage } from '@google-cloud/storage'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 
 const PROJECT_ID = process.env.GCS_PROJECT_ID
 const BUCKET_NAME = process.env.GCS_BUCKET_NAME
@@ -19,7 +19,7 @@ function getStorage() {
 
 // Require admin session for all uploads
 async function assertAdmin() {
-  const supabase = createAdminClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 }
