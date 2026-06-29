@@ -136,6 +136,60 @@ export const GUIDES: GuideMeta[] = [
     updated: 'June 2026',
     service: 'motorbike-rental',
   },
+  {
+    slug: 'living-in-da-nang',
+    title: 'Living in Da Nang: Complete Expat Guide (2026)',
+    excerpt:
+      'Everything you need to know about living in Da Nang as an expat — cost, housing, healthcare, community, visas and daily life on Vietnam\'s best beach city.',
+    category: 'Lifestyle',
+    readTime: '10 min read',
+    updated: 'June 2026',
+  },
+  {
+    slug: 'digital-nomad-da-nang',
+    title: 'Da Nang Digital Nomad Guide 2026: Work, Live & Thrive',
+    excerpt:
+      'Da Nang is one of Asia\'s top digital nomad cities. Fast internet, low cost, a strong remote-work community and a beach on your doorstep.',
+    category: 'Lifestyle',
+    readTime: '9 min read',
+    updated: 'June 2026',
+  },
+  {
+    slug: 'moving-to-da-nang',
+    title: 'Moving to Da Nang: Complete Checklist for Expats (2026)',
+    excerpt:
+      'Everything you need to plan and execute a smooth move to Da Nang — what to sort before you arrive, first-week essentials, and common mistakes to avoid.',
+    category: 'Lifestyle',
+    readTime: '8 min read',
+    updated: 'June 2026',
+  },
+  {
+    slug: 'coworking-da-nang',
+    title: 'Best Coworking Spaces in Da Nang 2026 (Honest Guide)',
+    excerpt:
+      'Honest reviews of the best coworking spaces and work-friendly cafés in Da Nang — speed, atmosphere, desk quality and value for remote workers.',
+    category: 'Lifestyle',
+    readTime: '7 min read',
+    updated: 'June 2026',
+  },
+  {
+    slug: 'expat-life-da-nang',
+    title: 'Expat Life in Da Nang: Community, Social Life & Settling In',
+    excerpt:
+      'What expat life in Da Nang is really like — the community, social scene, sports clubs, events and how to build a real life here, not just survive.',
+    category: 'Lifestyle',
+    readTime: '7 min read',
+    updated: 'June 2026',
+  },
+  {
+    slug: 'is-da-nang-safe',
+    title: 'Is Da Nang Safe? Honest Safety Guide for Expats (2026)',
+    excerpt:
+      'Da Nang is one of Vietnam\'s safest cities — but here\'s an honest breakdown of real risks, what to watch for, and how to stay safe as an expat.',
+    category: 'Lifestyle',
+    readTime: '6 min read',
+    updated: 'June 2026',
+  },
 ]
 
 export const CATEGORY_COLORS: Record<GuideCategory, string> = {
