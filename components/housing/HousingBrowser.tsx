@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { HousingListingPublic, HousingFilters as FiltersType, HousingSortKey } from '@/types/housing'
 import { HousingCard, HousingCardSkeleton } from './HousingCard'
 import { HousingFilters } from './HousingFilters'
@@ -68,9 +68,15 @@ const DEFAULT_FILTERS: FiltersType = {
 
 const PER_PAGE = 9
 
-export function HousingBrowser() {
-  const [listings, setListings] = useState<HousingListingPublic[]>([])
-  const [loading, setLoading] = useState(true)
+export function HousingBrowser({
+  initialListings = [],
+}: {
+  initialListings?: HousingListingPublic[]
+}) {
+  const [listings, setListings] = useState<HousingListingPublic[]>(initialListings)
+  const [loading, setLoading] = useState(initialListings.length === 0)
+  /** Skips the mount-time refetch when the server already supplied the default set. */
+  const skipInitialFetch = useRef(initialListings.length > 0)
   const [filters, setFilters] = useState<FiltersType>(DEFAULT_FILTERS)
   const [sort, setSort] = useState<HousingSortKey>('newest')
   const [showVnd, setShowVnd] = useState(false)
@@ -108,7 +114,13 @@ export function HousingBrowser() {
     }
   }, [filters, sort])
 
-  useEffect(() => { fetchListings() }, [fetchListings])
+  useEffect(() => {
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false
+      return
+    }
+    fetchListings()
+  }, [fetchListings])
 
   const paginated = listings.slice(0, page * PER_PAGE)
   const hasMore = paginated.length < listings.length

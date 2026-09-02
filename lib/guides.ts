@@ -12,7 +12,10 @@ export interface GuideMeta {
   excerpt: string
   category: GuideCategory
   readTime: string
+  /** Display label for the last content update, e.g. "June 2026". */
   updated: string
+  /** Original publish label, same format. Defaults to `updated` when unset. */
+  published?: string
   /** Service slug this guide relates to, for cross-linking the CTA */
   service?: string
 }

@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { ArrowUp, MessageCircle, X } from 'lucide-react'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 /**
  * Global floating actions:
@@ -8,7 +9,7 @@ import { ArrowUp, MessageCircle, X } from 'lucide-react'
  *  - Back-to-top button that appears after scrolling
  */
 export function FloatingActions() {
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+  const wa = WHATSAPP_NUMBER
   const [showTop, setShowTop] = useState(false)
   const [open, setOpen] = useState(false)
 

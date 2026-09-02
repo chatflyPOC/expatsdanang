@@ -24,6 +24,22 @@ export async function createClient() {
   )
 }
 
+/**
+ * Cookie-free client for anonymous public reads.
+ *
+ * `createClient` touches `cookies()`, which opts the calling route into fully
+ * dynamic rendering and silently overrides any `revalidate` export. Public
+ * read-only queries should use this instead so the page stays ISR-cacheable.
+ * Uses the publishable key, so RLS still applies.
+ */
+export function createPublicClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  )
+}
+
 export function createAdminClient() {
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

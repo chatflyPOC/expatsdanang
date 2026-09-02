@@ -7,6 +7,7 @@ import { Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Chip } from '@/components/ui/Chip'
 import { CheckCircle } from 'lucide-react'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 const ALL_SERVICES = [
   'Airport transfer', 'Housing & rental', 'Bank account',
@@ -104,7 +105,7 @@ export function RequestForm() {
   }
 
   if (submitted) {
-    const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+    const wa = WHATSAPP_NUMBER
     return (
       <div className="text-center py-16">
         <CheckCircle size={48} className="text-[#1D9E75] mx-auto mb-4" />

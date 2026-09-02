@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 const SERVICES = [
   { label: 'Airport Transfer', href: '/services/airport-transfer' },
@@ -18,7 +19,7 @@ const RESOURCES = [
 ]
 
 export function Footer() {
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+  const wa = WHATSAPP_NUMBER
   const year = new Date().getFullYear()
 
   return (

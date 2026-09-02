@@ -1,6 +1,7 @@
 import { RequestForm } from '@/components/RequestForm'
 import { MessageCircle, Clock, ShieldCheck } from 'lucide-react'
 import { pageMetadata } from '@/lib/seo'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 export const metadata = pageMetadata({
   title: 'Get Help',
@@ -9,7 +10,7 @@ export const metadata = pageMetadata({
   keywords: ['get help Da Nang', 'expat services Da Nang', 'Da Nang concierge'],
 })
 
-const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+const wa = WHATSAPP_NUMBER
 
 export default function GetHelpPage() {
   return (
