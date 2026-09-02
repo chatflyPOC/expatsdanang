@@ -4,14 +4,40 @@ import { GUIDES } from '@/lib/guides'
 import { SITE } from '@/lib/seo'
 import { createAdminClient } from '@/lib/supabase/server'
 
+interface ListingRow {
+  id: string
+  updated_at: string | null
+}
+
+/**
+ * Listing rows for the sitemap, or empty if the database can't be reached.
+ *
+ * This route is prerendered, so an unreachable Supabase (missing env vars in a
+ * preview environment, an outage mid-deploy) used to throw and fail the whole
+ * build. A sitemap missing its dynamic entries is recoverable on the next
+ * revalidation; a blocked deploy is not.
+ */
+async function getListingRows(): Promise<{
+  housing: ListingRow[]
+  motorbike: ListingRow[]
+}> {
+  try {
+    const supabase = createAdminClient()
+    const [{ data: housing }, { data: motorbike }] = await Promise.all([
+      supabase.from('housing_listings').select('id, updated_at').eq('status', 'available'),
+      supabase.from('motorbike_listings').select('id, updated_at').eq('status', 'available'),
+    ])
+    return { housing: housing ?? [], motorbike: motorbike ?? [] }
+  } catch (error) {
+    console.error('[sitemap] listing lookup failed, emitting static routes only:', error)
+    return { housing: [], motorbike: [] }
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
-  const supabase = createAdminClient()
-
-  const [{ data: housingListings }, { data: motorbikeListings }] = await Promise.all([
-    supabase.from('housing_listings').select('id, updated_at').eq('status', 'active'),
-    supabase.from('motorbike_listings').select('id, updated_at').eq('status', 'active'),
-  ])
+  const { housing: housingListings, motorbike: motorbikeListings } =
+    await getListingRows()
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE.url, lastModified: now, changeFrequency: 'weekly', priority: 1 },
