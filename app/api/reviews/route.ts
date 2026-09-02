@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
     }
 
-    const supabase = await createAdminClient()
+    const supabase = createAdminClient()
     const { data, error } = await supabase
       .from('reviews')
       .insert({ ...parsed.data, status: 'pending' })
