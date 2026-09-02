@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { MotorbikeListing, MotorbikeType, MOTORBIKE_TYPES, DISTRICTS } from '@/types/motorbike'
 import { MOCK_MOTORBIKE } from '@/lib/motorbike-mock'
 import { MotorbikeCard, MotorbikeCardSkeleton } from './MotorbikeCard'
@@ -11,9 +11,15 @@ const PRICE_PRESETS = [
   { label: 'Under $15', max: 15 },
 ]
 
-export function MotorbikeBrowser() {
-  const [listings, setListings] = useState<MotorbikeListing[]>([])
-  const [loading, setLoading] = useState(true)
+export function MotorbikeBrowser({
+  initialListings = [],
+}: {
+  initialListings?: MotorbikeListing[]
+}) {
+  const [listings, setListings] = useState<MotorbikeListing[]>(initialListings)
+  const [loading, setLoading] = useState(initialListings.length === 0)
+  /** Skips the mount-time refetch when the server already supplied the default set. */
+  const skipInitialFetch = useRef(initialListings.length > 0)
   const [sort, setSort] = useState('newest')
   const [showFilters, setShowFilters] = useState(false)
 
@@ -46,7 +52,13 @@ export function MotorbikeBrowser() {
     }
   }, [sort, types, district, maxPrice, helmet, insurance, delivery])
 
-  useEffect(() => { fetchListings() }, [fetchListings])
+  useEffect(() => {
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false
+      return
+    }
+    fetchListings()
+  }, [fetchListings])
 
   const toggleType = (t: MotorbikeType) =>
     setTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])

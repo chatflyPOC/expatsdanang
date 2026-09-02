@@ -5,13 +5,13 @@ import { HowItWorks } from '@/components/HowItWorks'
 import { ExploreDanang } from '@/components/ExploreDanang'
 import { ReviewsSection } from '@/components/ReviewsSection'
 import { CtaBanner } from '@/components/CtaBanner'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 
 export const revalidate = 86400
 
 async function getStats() {
   try {
-    const supabase = await createClient()
+    const supabase = createPublicClient()
     const { data } = await supabase.from('site_stats').select('*')
     return data || []
   } catch {
@@ -21,7 +21,7 @@ async function getStats() {
 
 async function getReviews() {
   try {
-    const supabase = await createClient()
+    const supabase = createPublicClient()
     const { data } = await supabase
       .from('reviews')
       .select('*')

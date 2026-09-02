@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { Menu, X, MessageCircle, ChevronDown } from 'lucide-react'
 import { Logo } from '@/components/Logo'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 // Direct top-level nav tabs (not in dropdown)
 const NAV_PRIMARY = [
@@ -31,7 +32,7 @@ export function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false)
   const servicesRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+  const wa = WHATSAPP_NUMBER
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)

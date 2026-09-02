@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { MotorbikeBrowser } from '@/components/motorbike/MotorbikeBrowser'
+import { getInitialMotorbikeListings } from '@/lib/listings'
 
 export const metadata: Metadata = {
   title: 'Motorbike Rental Da Nang — from $5/day | ExpatsDanang',
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function MotorbikeRentalPage() {
+export const revalidate = 3600
+
+export default async function MotorbikeRentalPage() {
+  const initialListings = await getInitialMotorbikeListings()
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
@@ -43,7 +48,7 @@ export default function MotorbikeRentalPage() {
         </div>
       </div>
 
-      <MotorbikeBrowser />
+      <MotorbikeBrowser initialListings={initialListings} />
     </div>
   )
 }

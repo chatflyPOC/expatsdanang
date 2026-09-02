@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { WHATSAPP_NUMBER } from './contact'
 import { ServiceRequestInput, HousingInquiryInput } from './validations'
 
 function getResend() {
@@ -136,7 +137,7 @@ export async function sendUserConfirmation(data: ServiceRequestInput) {
       <p>Thanks for reaching out. We've received your request for: <strong>${data.services.join(', ')}</strong>.</p>
       <p>We'll get back to you within 2 hours.</p>
       <p>In the meantime, you can also reach us on WhatsApp:
-        <a href="https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}">Chat now</a>
+        <a href="https://wa.me/${WHATSAPP_NUMBER}">Chat now</a>
       </p>
       <p>— Expats Da Nang team</p>
     `,

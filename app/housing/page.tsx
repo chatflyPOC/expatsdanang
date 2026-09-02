@@ -1,9 +1,12 @@
 import { HousingBrowser } from '@/components/housing/HousingBrowser'
+import { getInitialHousingListings } from '@/lib/listings'
 import { JsonLd } from '@/components/JsonLd'
-import { pageMetadata } from '@/lib/seo'
+import { absoluteUrl, breadcrumbLd, pageMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = pageMetadata({
   title: 'Apartments & Houses for Rent in Da Nang',
@@ -16,17 +19,24 @@ export const metadata: Metadata = pageMetadata({
   ],
 })
 
-export default function HousingPage() {
+export default async function HousingPage() {
+  const initialListings = await getInitialHousingListings()
+
   return (
     <>
       <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'ItemList',
-          name: 'Apartments and Houses for Rent in Da Nang',
-          description: 'Verified rental listings in Da Nang for expats and digital nomads',
-          url: `${process.env.NEXT_PUBLIC_SITE_URL}/housing`,
-        }}
+        data={[
+          {
+            '@type': 'ItemList',
+            name: 'Apartments and Houses for Rent in Da Nang',
+            description: 'Verified rental listings in Da Nang for expats and digital nomads',
+            url: absoluteUrl('/housing'),
+          },
+          breadcrumbLd([
+            { name: 'Home', path: '/' },
+            { name: 'Housing', path: '/housing' },
+          ]),
+        ]}
       />
 
       {/* Breadcrumb */}
@@ -50,7 +60,7 @@ export default function HousingPage() {
           </p>
         </div>
 
-        <HousingBrowser />
+        <HousingBrowser initialListings={initialListings} />
       </div>
     </>
   )

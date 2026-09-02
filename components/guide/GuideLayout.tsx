@@ -8,6 +8,7 @@ import { articleLd, breadcrumbLd } from '@/lib/seo'
 import { GUIDE_HERO_MAP } from '@/components/art/DanangScene'
 import { GuideRating } from '@/components/guide/GuideRating'
 import { createClient } from '@/lib/supabase/server'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 interface GuideLayoutProps {
   meta: GuideMeta
@@ -34,7 +35,7 @@ async function fetchRating(slug: string) {
 }
 
 export async function GuideLayout({ meta, checklist, sidebarExtra, children }: GuideLayoutProps) {
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+  const wa = WHATSAPP_NUMBER
   const service = meta.service ? getService(meta.service) : undefined
   const related = relatedGuides(meta.slug)
   const HeroArt = GUIDE_HERO_MAP[meta.slug]

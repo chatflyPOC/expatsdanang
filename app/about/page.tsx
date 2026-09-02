@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { MapPin, Heart, ShieldCheck, MessageCircle } from 'lucide-react'
 import { pageMetadata } from '@/lib/seo'
+import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 export const metadata = pageMetadata({
   title: 'About Us',
@@ -40,7 +41,7 @@ const STATS = [
 ]
 
 export default function AboutPage() {
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '84000000000'
+  const wa = WHATSAPP_NUMBER
 
   return (
     <div>

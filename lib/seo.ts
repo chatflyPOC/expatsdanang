@@ -1,11 +1,39 @@
 import type { Metadata } from 'next'
 import { GuideMeta, getGuide } from './guides'
+import { WHATSAPP_E164 } from './contact'
 import { ServiceConfig } from '@/types'
+
+/**
+ * The host we actually serve on. Vercel treats www as primary and 308s the
+ * apex to it, so every canonical, og:url, sitemap <loc> and JSON-LD @id has to
+ * agree with it — a canonical pointing at the apex resolves to a redirect back
+ * to the page that declared it.
+ */
+const CANONICAL_ORIGIN = 'https://www.expatsdanang.com'
+
+/**
+ * Honours NEXT_PUBLIC_SITE_URL for local and preview hosts, but pins the
+ * production origin so a stale dashboard value can't desynchronise canonicals
+ * from the host that actually serves the response.
+ */
+function resolveSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+  if (!raw) return CANONICAL_ORIGIN
+  try {
+    const host = new URL(raw).hostname
+    if (host === 'expatsdanang.com' || host.endsWith('.expatsdanang.com')) {
+      return CANONICAL_ORIGIN
+    }
+    return raw.replace(/\/$/, '')
+  } catch {
+    return CANONICAL_ORIGIN
+  }
+}
 
 /** Central site identity used across metadata + structured data. */
 export const SITE = {
   name: 'Expats Da Nang',
-  url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://expatsdanang.com').replace(/\/$/, ''),
+  url: resolveSiteUrl(),
   description:
     'Airport pickup, housing, visas, bank accounts — everything expats need to settle in Da Nang, handled by people who actually live here.',
   locale: 'en_US',
@@ -16,8 +44,28 @@ export const SITE = {
   ],
 }
 
-/** Default publish/modified date for content until per-article dates are set. */
+/** Fallback used only when a guide's `updated` string can't be parsed. */
 const DEFAULT_DATE = '2025-06-15'
+
+const MONTHS = [
+  'january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december',
+]
+
+/**
+ * Turns a guide's human `updated` label ("June 2026") into an ISO date for
+ * structured data. Guides carry a display string rather than a timestamp, so
+ * this keeps schema dates tracking the date shown on the page instead of a
+ * hardcoded constant that never moves when content is edited.
+ */
+export function guideDateIso(value?: string): string {
+  if (!value) return DEFAULT_DATE
+  const match = value.trim().match(/^([A-Za-z]+)\s+(\d{4})$/)
+  if (!match) return DEFAULT_DATE
+  const month = MONTHS.indexOf(match[1].toLowerCase())
+  if (month === -1) return DEFAULT_DATE
+  return `${match[2]}-${String(month + 1).padStart(2, '0')}-01`
+}
 
 export function absoluteUrl(path = ''): string {
   if (!path) return SITE.url
@@ -40,6 +88,14 @@ export function organizationLd() {
     taxID: '0402211642',
     url: SITE.url,
     email: SITE.email,
+    telephone: WHATSAPP_E164,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: WHATSAPP_E164,
+      email: SITE.email,
+      availableLanguage: ['English', 'Vietnamese'],
+    },
     logo: { '@type': 'ImageObject', url: LOGO_URL, width: 64, height: 64 },
     image: OG_URL,
     description: SITE.description,
@@ -94,6 +150,7 @@ export function localBusinessLd() {
     areaServed: { '@type': 'City', name: 'Da Nang' },
     priceRange: '$',
     email: SITE.email,
+    telephone: WHATSAPP_E164,
     sameAs: SITE.sameAs,
     parentOrganization: { '@id': ORG_ID },
   }
@@ -125,8 +182,8 @@ export function articleLd(meta: GuideMeta, aggregateRating?: AggregateRating | n
     description: meta.excerpt,
     image: OG_URL,
     inLanguage: 'en',
-    datePublished: DEFAULT_DATE,
-    dateModified: DEFAULT_DATE,
+    datePublished: guideDateIso(meta.published ?? meta.updated),
+    dateModified: guideDateIso(meta.updated),
     author: { '@id': ORG_ID },
     publisher: { '@id': ORG_ID },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
@@ -199,8 +256,8 @@ export function guideMetadata(
       description,
       siteName: SITE.name,
       locale: SITE.locale,
-      publishedTime: DEFAULT_DATE,
-      modifiedTime: DEFAULT_DATE,
+      publishedTime: guideDateIso(g.published ?? g.updated),
+      modifiedTime: guideDateIso(g.updated),
       authors: [SITE.name],
       section: g.category,
       images: [{ url: '/og.svg', width: 1200, height: 630, alt: title }],
