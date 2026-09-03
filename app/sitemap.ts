@@ -49,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE.url}/motorbike-rental`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
   ]
 
-  const servicePages: MetadataRoute.Sitemap = SERVICES.map((s) => ({
+  const servicePages: MetadataRoute.Sitemap = SERVICES.filter((s) => !s.hubPath).map((s) => ({
     url: `${SITE.url}/services/${s.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',

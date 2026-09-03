@@ -40,6 +40,9 @@ export async function GuideLayout({ meta, checklist, sidebarExtra, children }: G
   const related = relatedGuides(meta.slug)
   const HeroArt = GUIDE_HERO_MAP[meta.slug]
   const rating = await fetchRating(meta.slug)
+  const reviewedLabel = meta.reviewedAt
+    ? new Date(meta.reviewedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    : null
 
   return (
     <>
@@ -79,12 +82,53 @@ export async function GuideLayout({ meta, checklist, sidebarExtra, children }: G
                 {meta.category}
               </span>
               <h1 className="text-3xl font-semibold text-gray-900 leading-snug mt-4 mb-3">{meta.title}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-400">
+              <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
                 <span className="flex items-center gap-1"><Clock size={13} /> {meta.readTime}</span>
                 {meta.updated && <span>Updated {meta.updated}</span>}
+                {reviewedLabel && <span>Reviewed {reviewedLabel}</span>}
               </div>
+
+              {/* Byline — mirrors the author card on the database-backed guides */}
+              {meta.author && (
+                <div className="flex items-start gap-3 mt-6 pt-6 border-t border-[#E5E7EB]">
+                  <div className="w-10 h-10 rounded-full bg-[#1D9E75] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                    {meta.author.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{meta.author.name}</p>
+                    {meta.author.title && <p className="text-xs text-[#1D9E75]">{meta.author.title}</p>}
+                    {meta.author.bio && (
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{meta.author.bio}</p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             {children}
+
+            {/* Sources */}
+            {meta.sources && meta.sources.length > 0 && (
+              <div className="mt-10 pt-6 border-t border-[#E5E7EB]">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                  Sources &amp; references
+                </p>
+                <ul className="space-y-1.5">
+                  {meta.sources.map((s, i) => (
+                    <li key={s.url} className="flex items-start gap-2 text-sm">
+                      <span className="text-gray-300 flex-shrink-0 mt-0.5">[{i + 1}]</span>
+                      <a
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#1AA5D8] hover:underline"
+                      >
+                        {s.title || s.url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <GuideRating
               slug={meta.slug}
               initialRating={rating?.ratingValue ?? null}
@@ -102,7 +146,7 @@ export async function GuideLayout({ meta, checklist, sidebarExtra, children }: G
               </p>
               {service && (
                 <Link
-                  href={`/services/${service.slug}`}
+                  href={service.hubPath ?? `/services/${service.slug}`}
                   className="block text-center text-sm font-medium bg-[#1D9E75] text-white px-4 py-2.5 rounded-full hover:bg-[#0F6E56] transition-colors mb-3"
                 >
                   See {service.title.toLowerCase()} service

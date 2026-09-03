@@ -6,6 +6,20 @@ export type GuideCategory =
   | 'Lifestyle'
   | 'Health'
 
+/** An external reference backing claims made in a guide. */
+export interface GuideSource {
+  title: string
+  url: string
+}
+
+/** Byline for a guide. Falls back to the organisation when unset. */
+export interface GuideAuthor {
+  name: string
+  title?: string
+  bio?: string
+  avatarUrl?: string
+}
+
 export interface GuideMeta {
   slug: string
   title: string
@@ -18,6 +32,16 @@ export interface GuideMeta {
   published?: string
   /** Service slug this guide relates to, for cross-linking the CTA */
   service?: string
+  /**
+   * E-E-A-T fields. The database-backed guides under /guides/[slug] have
+   * carried a byline, citations and a review date since launch; the static
+   * guides below had no way to express any of them — which left the site's two
+   * highest-value pages (visa options, cost of living) with none.
+   */
+  author?: GuideAuthor
+  sources?: GuideSource[]
+  /** ISO date the content was last fact-checked, e.g. "2026-09-03". */
+  reviewedAt?: string
 }
 
 export const GUIDES: GuideMeta[] = [
@@ -30,6 +54,10 @@ export const GUIDES: GuideMeta[] = [
     readTime: '5 min read',
     updated: 'June 2025',
     service: 'bank-account',
+    sources: [
+      { title: 'State Bank of Vietnam — regulations for foreign account holders', url: 'https://www.sbv.gov.vn' },
+      { title: 'Vietcombank — personal account requirements', url: 'https://www.vietcombank.com.vn' },
+    ],
   },
   {
     slug: 'visa-options-da-nang',
@@ -40,6 +68,9 @@ export const GUIDES: GuideMeta[] = [
     readTime: '7 min read',
     updated: 'June 2025',
     service: 'visa-documents',
+    sources: [
+      { title: 'Vietnam Immigration Department — official portal', url: 'https://xuatnhapcanh.gov.vn' },
+    ],
   },
   {
     slug: 'best-neighborhoods-da-nang-expats',
@@ -50,6 +81,9 @@ export const GUIDES: GuideMeta[] = [
     readTime: '6 min read',
     updated: 'June 2025',
     service: 'housing',
+    sources: [
+      { title: 'Da Nang official tourism portal — districts and areas', url: 'https://danangfantasticity.com' },
+    ],
   },
   {
     slug: 'getting-around-da-nang',
@@ -60,6 +94,9 @@ export const GUIDES: GuideMeta[] = [
     readTime: '5 min read',
     updated: 'June 2025',
     service: 'motorbike-rental',
+    sources: [
+      { title: 'Da Nang official tourism portal — getting around the city', url: 'https://danangfantasticity.com' },
+    ],
   },
   {
     slug: 'cost-of-living-da-nang',
@@ -69,6 +106,9 @@ export const GUIDES: GuideMeta[] = [
     category: 'Lifestyle',
     readTime: '8 min read',
     updated: 'June 2025',
+    sources: [
+      { title: 'Numbeo — Da Nang cost of living index', url: 'https://www.numbeo.com/cost-of-living/in/Da-Nang' },
+    ],
   },
   {
     slug: 'healthcare-da-nang',
@@ -78,6 +118,10 @@ export const GUIDES: GuideMeta[] = [
     category: 'Health',
     readTime: '6 min read',
     updated: 'June 2025',
+    sources: [
+      { title: 'Family Medical Practice Vietnam', url: 'https://www.vietnammedicalpractice.com' },
+      { title: 'Vinmec International Hospital', url: 'https://www.vinmec.com' },
+    ],
   },
   {
     slug: 'apartment-for-rent-da-nang',

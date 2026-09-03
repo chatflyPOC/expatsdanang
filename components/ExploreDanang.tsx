@@ -57,7 +57,7 @@ export function ExploreDanang() {
             return (
               <Reveal key={area.name} delay={(i % 4) * 80}>
                 <Link
-                  href="/services/housing"
+                  href="/housing"
                   className="lift group block rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-[#1AA5D8]/50 h-full"
                 >
                   <div className="relative h-32 overflow-hidden">

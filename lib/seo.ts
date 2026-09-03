@@ -184,8 +184,22 @@ export function articleLd(meta: GuideMeta, aggregateRating?: AggregateRating | n
     inLanguage: 'en',
     datePublished: guideDateIso(meta.published ?? meta.updated),
     dateModified: guideDateIso(meta.updated),
-    author: { '@id': ORG_ID },
+    // A named person is a stronger authorship signal than the organisation,
+    // so use one whenever the guide supplies a byline.
+    author: meta.author
+      ? {
+          '@type': 'Person',
+          name: meta.author.name,
+          ...(meta.author.title ? { jobTitle: meta.author.title } : {}),
+          ...(meta.author.bio ? { description: meta.author.bio } : {}),
+          worksFor: { '@id': ORG_ID },
+        }
+      : { '@id': ORG_ID },
     publisher: { '@id': ORG_ID },
+    ...(meta.reviewedAt ? { dateReviewed: meta.reviewedAt } : {}),
+    ...(meta.sources && meta.sources.length > 0
+      ? { citation: meta.sources.map((s) => ({ '@type': 'CreativeWork', name: s.title, url: s.url })) }
+      : {}),
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     articleSection: meta.category,
     isAccessibleForFree: true,

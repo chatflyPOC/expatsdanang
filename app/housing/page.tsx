@@ -43,9 +43,7 @@ export default async function HousingPage() {
       <nav className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-1.5 text-xs text-gray-400">
         <Link href="/" className="hover:text-gray-700">Home</Link>
         <ChevronRight size={12} />
-        <Link href="/services/housing" className="hover:text-gray-700">Housing</Link>
-        <ChevronRight size={12} />
-        <span className="text-gray-700">Listings</span>
+        <span className="text-gray-700">Housing</span>
       </nav>
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
