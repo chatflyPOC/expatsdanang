@@ -16,6 +16,7 @@ export const SERVICES: ServiceConfig[] = [
   },
   {
     slug: 'housing',
+    hubPath: '/housing',
     title: 'Housing & Rental',
     description: 'We match you with verified landlords and trusted agents. No language barrier, no scams — just the right place at the right price.',
     price: 'Free matching',
@@ -68,6 +69,7 @@ export const SERVICES: ServiceConfig[] = [
   },
   {
     slug: 'motorbike-rental',
+    hubPath: '/motorbike-rental',
     title: 'Motorbike Rental',
     description: 'Trusted motorbike rentals from verified local owners. Semi-automatics and scooters for any budget.',
     price: 'from $5/day',

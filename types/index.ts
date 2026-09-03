@@ -102,6 +102,12 @@ export interface SiteStat {
 
 export interface ServiceConfig {
   slug: string
+  /**
+   * When set, this service's canonical page is a hub elsewhere (e.g. /housing)
+   * and /services/[slug] permanently redirects there. Links, the sitemap and
+   * static params all follow this instead of the /services/ path.
+   */
+  hubPath?: string
   title: string
   description: string
   price: string

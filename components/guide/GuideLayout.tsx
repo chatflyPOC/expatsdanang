@@ -146,7 +146,7 @@ export async function GuideLayout({ meta, checklist, sidebarExtra, children }: G
               </p>
               {service && (
                 <Link
-                  href={`/services/${service.slug}`}
+                  href={service.hubPath ?? `/services/${service.slug}`}
                   className="block text-center text-sm font-medium bg-[#1D9E75] text-white px-4 py-2.5 rounded-full hover:bg-[#0F6E56] transition-colors mb-3"
                 >
                   See {service.title.toLowerCase()} service

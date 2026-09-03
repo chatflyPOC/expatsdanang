@@ -4,10 +4,10 @@ import { WHATSAPP_NUMBER } from '@/lib/contact'
 
 const SERVICES = [
   { label: 'Airport Transfer', href: '/services/airport-transfer' },
-  { label: 'Housing & Rental', href: '/services/housing' },
+  { label: 'Housing & Rental', href: '/housing' },
   { label: 'Visa & Documents', href: '/services/visa-documents' },
   { label: 'Bank Account', href: '/services/bank-account' },
-  { label: 'Motorbike Rental', href: '/services/motorbike-rental' },
+  { label: 'Motorbike Rental', href: '/motorbike-rental' },
   { label: 'Translation', href: '/services/translation' },
 ]
 

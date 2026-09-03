@@ -6,6 +6,19 @@ const nextConfig: NextConfig = {
   experimental: {
     mcpServer: false,
   },
+  async redirects() {
+    // Housing and motorbike each had two competing indexable pages: a ~35-word
+    // /services/ stub and the real hub carrying the live inventory. The stubs
+    // fold into the hubs so one URL owns each intent.
+    return [
+      { source: "/services/housing", destination: "/housing", permanent: true },
+      {
+        source: "/services/motorbike-rental",
+        destination: "/motorbike-rental",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

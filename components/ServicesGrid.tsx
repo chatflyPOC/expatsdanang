@@ -31,7 +31,7 @@ export function ServicesGrid() {
           return (
             <Reveal key={svc.slug} delay={(i % 3) * 80}>
               <Link
-                href={`/services/${svc.slug}`}
+                href={svc.hubPath ?? `/services/${svc.slug}`}
                 className="lift group block h-full border border-[#E5E7EB] rounded-2xl p-6 bg-white hover:border-[#1D9E75]/50 hover:shadow-[0_12px_30px_-12px_rgba(29,158,117,0.35)]"
               >
                 <div className="flex items-center justify-between mb-4">

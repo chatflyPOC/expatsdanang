@@ -9,7 +9,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { pageMetadata, serviceLd, breadcrumbLd } from '@/lib/seo'
 
 export async function generateStaticParams() {
-  return SERVICES.map((s) => ({ slug: s.slug }))
+  return SERVICES.filter((s) => !s.hubPath).map((s) => ({ slug: s.slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
