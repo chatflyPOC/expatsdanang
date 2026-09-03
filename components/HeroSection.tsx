@@ -18,7 +18,14 @@ export function HeroSection() {
               <MapPin size={14} />
               Da Nang, Vietnam
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold text-gray-900 leading-[1.08] mb-5 animate-fade-up delay-100">
+            {/*
+              Deliberately not animated. `.animate-fade-up` uses
+              animation-fill-mode: both, which holds the element at opacity 0
+              until the animation starts — so animating the largest above-fold
+              text hid the LCP candidate for ~800ms and pushed the measured LCP
+              element onto the navbar logo instead. The stagger below is kept.
+            */}
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold text-gray-900 leading-[1.08] mb-5">
               Your local assistant in{' '}
               <span className="text-[#1D9E75]">Da Nang</span>
             </h1>
