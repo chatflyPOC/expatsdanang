@@ -4,9 +4,16 @@ import { GUIDES } from '@/lib/guides'
 import { SITE } from '@/lib/seo'
 import { createAdminClient } from '@/lib/supabase/server'
 
+/**
+ * Regenerate hourly rather than pinning listings to build time, so newly
+ * published inventory reaches the sitemap within the hour instead of waiting
+ * for the next deploy.
+ */
+export const revalidate = 3600
+
 interface ListingRow {
   id: string
-  updated_at: string | null
+  created_at: string | null
 }
 
 /**
@@ -23,11 +30,23 @@ async function getListingRows(): Promise<{
 }> {
   try {
     const supabase = createAdminClient()
-    const [{ data: housing }, { data: motorbike }] = await Promise.all([
-      supabase.from('housing_listings').select('id, updated_at').eq('status', 'available'),
-      supabase.from('motorbike_listings').select('id, updated_at').eq('status', 'available'),
+    const [housingRes, motorbikeRes] = await Promise.all([
+      supabase.from('housing_listings').select('id, created_at').eq('status', 'available'),
+      supabase.from('motorbike_listings').select('id, created_at').eq('status', 'available'),
     ])
-    return { housing: housing ?? [], motorbike: motorbike ?? [] }
+    // Supabase reports a bad column as `error`, not a thrown exception. Reading
+    // only `data` meant a query naming a non-existent column returned null and
+    // silently produced a listing-free sitemap — which is exactly what happened
+    // with `updated_at`, a column neither table has. Log it loudly instead.
+    for (const [table, res] of [
+      ['housing_listings', housingRes],
+      ['motorbike_listings', motorbikeRes],
+    ] as const) {
+      if (res.error) {
+        console.error(`[sitemap] ${table} query failed: ${res.error.message}`)
+      }
+    }
+    return { housing: housingRes.data ?? [], motorbike: motorbikeRes.data ?? [] }
   } catch (error) {
     console.error('[sitemap] listing lookup failed, emitting static routes only:', error)
     return { housing: [], motorbike: [] }
@@ -65,14 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const housingPages: MetadataRoute.Sitemap = (housingListings ?? []).map((l) => ({
     url: `${SITE.url}/rentals/${l.id}`,
-    lastModified: l.updated_at ? new Date(l.updated_at) : now,
+    lastModified: l.created_at ? new Date(l.created_at) : now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))
 
   const motorbikePages: MetadataRoute.Sitemap = (motorbikeListings ?? []).map((l) => ({
     url: `${SITE.url}/motorbike-rental/${l.id}`,
-    lastModified: l.updated_at ? new Date(l.updated_at) : now,
+    lastModified: l.created_at ? new Date(l.created_at) : now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))

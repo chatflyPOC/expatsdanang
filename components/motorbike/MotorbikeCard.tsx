@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, Zap, Shield, Truck, Star, ImageIcon } from 'lucide-react'
 import { MotorbikeListing, typeLabel, CONDITION_LABELS } from '@/types/motorbike'
 
@@ -17,11 +18,12 @@ export function MotorbikeCard({ listing, isMock }: Props) {
       {/* Image */}
       <div className="relative h-44 bg-gray-100 overflow-hidden border-b border-[#E5E7EB]">
         {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={cover}
             alt={listing.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
