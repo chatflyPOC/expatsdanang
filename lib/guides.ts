@@ -229,6 +229,19 @@ export const GUIDES: GuideMeta[] = [
     updated: 'June 2026',
   },
   {
+    slug: 'self-drive-car-rental-da-nang',
+    title: 'Self-Drive Car Rental in Da Nang: The Expat Guide (2026)',
+    excerpt:
+      'Can foreigners actually rent a self-drive car in Da Nang? The licence rule that catches out most Americans and Australians, what rentals really cost, and when a driver is the better call.',
+    category: 'Transport',
+    readTime: '8 min read',
+    updated: 'September 2026',
+    sources: [
+      { title: 'International Driving Permit — 1949 and 1968 conventions compared', url: 'https://en.wikipedia.org/wiki/International_Driving_Permit' },
+      { title: 'Vietnam Law Magazine — International Driving Permits for foreigners', url: 'https://vietnamlawmagazine.vn/how-can-foreigners-obtain-international-driving-permits-in-vietnam-75857.html' },
+    ],
+  },
+  {
     slug: 'is-da-nang-safe',
     title: 'Is Da Nang Safe? Honest Safety Guide for Expats (2026)',
     excerpt:
