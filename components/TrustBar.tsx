@@ -17,7 +17,12 @@ function CountUpValue({ value }: { value: string }) {
   const suffix = match ? match[2] : value
   const decimals = match && match[1].includes('.') ? 1 : 0
 
-  const [display, setDisplay] = useState(target !== null ? '0' : value)
+  // Start at the real figure, not zero. This span is server-rendered, so seeding
+  // the countdown's starting value put "0+ Expats helped" and "0/5 Rating" into
+  // the HTML that crawlers read — and most AI crawlers never run the JavaScript
+  // that would count it up. The animation now begins from zero only once it is
+  // actually running on the client.
+  const [display, setDisplay] = useState(target !== null ? target.toFixed(decimals) : value)
   const ref = useRef<HTMLSpanElement>(null)
   const started = useRef(false)
 
@@ -25,6 +30,9 @@ function CountUpValue({ value }: { value: string }) {
     if (target === null) return
     const el = ref.current
     if (!el) return
+
+    // Respect a reduced-motion preference by leaving the figure at its final value.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
