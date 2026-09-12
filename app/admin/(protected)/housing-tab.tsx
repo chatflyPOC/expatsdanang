@@ -8,6 +8,7 @@ import {
   Car, PawPrint, ShieldCheck, FileText, UserCheck, ChevronDown, ChevronUp,
   Image as ImageIcon, Loader2, ToggleLeft, ToggleRight, Trash2,
 } from 'lucide-react'
+import { revalidatePublic } from '@/lib/revalidate'
 
 type FullListing = HousingListingPublic & {
   landlord_name?: string | null
@@ -333,12 +334,14 @@ export function HousingTab() {
   const toggleStatus = async (id: string, current: HousingStatus) => {
     const next: HousingStatus = current === 'available' ? 'hidden' : 'available'
     await supabase.from('housing_listings').update({ status: next }).eq('id', id)
+    await revalidatePublic('housing')
     load()
   }
 
   const deleteListing = async (id: string) => {
     if (!confirm('Delete this listing? This cannot be undone.')) return
     await supabase.from('housing_listings').delete().eq('id', id)
+    await revalidatePublic('housing')
     if (editing && (editing as FullListing).id === id) setEditing(null)
     load()
   }
@@ -361,6 +364,7 @@ export function HousingTab() {
         const { id, created_at, view_count, inquiry_count, ...rest } = payload as FullListing
         await supabase.from('housing_listings').insert(rest)
       }
+      await revalidatePublic('housing')
       setEditing(null)
       load()
     } catch (e) {

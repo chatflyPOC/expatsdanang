@@ -10,6 +10,7 @@ import {
   Plus, X, Upload, Video, Eye, Pencil, ChevronDown, ChevronUp,
   Image as ImageIcon, Loader2, ToggleLeft, ToggleRight, Trash2,
 } from 'lucide-react'
+import { revalidatePublic } from '@/lib/revalidate'
 
 // ── Admin-extended type ──────────────────────────────────────────────────────
 type FullListing = MotorbikeListing & {
@@ -267,12 +268,14 @@ export function MotorbikeTab() {
   const toggleStatus = async (id: string, current: MotorbikeStatus) => {
     const next: MotorbikeStatus = current === 'available' ? 'hidden' : 'available'
     await supabase.from('motorbike_listings').update({ status: next }).eq('id', id)
+    await revalidatePublic('motorbike')
     load()
   }
 
   const deleteListing = async (id: string) => {
     if (!confirm('Delete this listing? This cannot be undone.')) return
     await supabase.from('motorbike_listings').delete().eq('id', id)
+    await revalidatePublic('motorbike')
     if (editing && (editing as FullListing).id === id) setEditing(null)
     load()
   }
@@ -290,6 +293,7 @@ export function MotorbikeTab() {
         const { id, created_at, view_count, inquiry_count, ...rest } = payload as FullListing
         await supabase.from('motorbike_listings').insert(rest)
       }
+      await revalidatePublic('motorbike')
       setEditing(null); load()
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : 'Save failed')
