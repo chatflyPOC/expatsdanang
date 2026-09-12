@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Locally cloned SEO tooling, not part of the app
 /claude-seo/
+
+# SEO audit artifacts — generated output, not app code
+/expatsdanang.com-audit/
