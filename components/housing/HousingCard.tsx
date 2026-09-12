@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, Bed, Bath, Ruler, Waves, Star, ImageIcon } from 'lucide-react'
-import { HousingListingPublic, fmtPrice, typeLabel } from '@/types/housing'
+import { HousingListingPublic, fmtPrice, typeLabel, durationLabel } from '@/types/housing'
 import { WishlistButton } from './WishlistButton'
 import { clsx } from 'clsx'
 
@@ -15,10 +15,7 @@ export function HousingCard({ listing, showVnd }: Props) {
   const isNew = Date.now() - new Date(listing.created_at).getTime() < 7 * 86400_000
 
   return (
-    <Link
-      href={`/rentals/${listing.id}`}
-      className="group block border border-[#E5E7EB] rounded-xl overflow-hidden hover:border-[#1D9E75]/50 hover:shadow-[0_12px_30px_-14px_rgba(29,158,117,0.4)] bg-white transition-all"
-    >
+    <div className="group relative block border border-[#E5E7EB] rounded-xl overflow-hidden hover:border-[#1D9E75]/50 hover:shadow-[0_12px_30px_-14px_rgba(29,158,117,0.4)] bg-white transition-all">
       {/* Image */}
       <div className="relative h-44 bg-gray-100 overflow-hidden border-b border-[#E5E7EB]">
         {cover ? (
@@ -103,6 +100,27 @@ export function HousingCard({ listing, showVnd }: Props) {
           )}
         </div>
 
+        {/* Deposit and minimum term. Both decide whether a place is affordable
+            at all — a two-month deposit on top of first month's rent is the
+            single biggest arrival cost — and neither was visible before you had
+            opened the listing. */}
+        <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+          {listing.deposit_months > 0 && (
+            <span>
+              <span className="font-medium text-gray-900">{listing.deposit_months}</span>
+              {listing.deposit_months === 1 ? ' month' : ' months'} deposit
+            </span>
+          )}
+          {listing.min_duration && (
+            <>
+              <span className="text-gray-300">·</span>
+              <span>
+                <span className="font-medium text-gray-900">{durationLabel(listing.min_duration)}</span> min
+              </span>
+            </>
+          )}
+        </div>
+
         {/* Key amenity chips */}
         <div className="flex flex-wrap gap-1.5">
           {listing.furnishing === 'full' && (
@@ -113,8 +131,24 @@ export function HousingCard({ listing, showVnd }: Props) {
           {listing.views?.includes('sea') && <Chip>Sea view</Chip>}
           {listing.english_contract && <Chip>English contract</Chip>}
         </div>
+
+        <Link
+          href={`/rentals/${listing.id}#inquire`}
+          className="relative z-20 mt-4 block w-full rounded-full bg-[#1D9E75] px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-[#0F6E56]"
+        >
+          Inquire
+        </Link>
       </div>
-    </Link>
+
+      {/* The card used to be one big <Link>. An Inquire button cannot live
+          inside an anchor, so the card link is now an overlay filling the card
+          and sitting under the button, which links to the enquiry form. */}
+      <Link
+        href={`/rentals/${listing.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={listing.title_en}
+      />
+    </div>
   )
 }
 

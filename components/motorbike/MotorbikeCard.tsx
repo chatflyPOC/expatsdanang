@@ -14,7 +14,7 @@ export function MotorbikeCard({ listing, isMock }: Props) {
   const cond = CONDITION_LABELS[listing.condition]
 
   const inner = (
-    <div className={`group block border border-[#E5E7EB] rounded-xl overflow-hidden bg-white transition-all ${isMock ? 'opacity-80 cursor-default' : 'hover:border-[#1D9E75]/50 hover:shadow-[0_12px_30px_-14px_rgba(29,158,117,0.4)]'}`}>
+    <div className={`group relative block border border-[#E5E7EB] rounded-xl overflow-hidden bg-white transition-all ${isMock ? 'opacity-80 cursor-default' : 'hover:border-[#1D9E75]/50 hover:shadow-[0_12px_30px_-14px_rgba(29,158,117,0.4)]'}`}>
       {/* Image */}
       <div className="relative h-44 bg-gray-100 overflow-hidden border-b border-[#E5E7EB]">
         {cover ? (
@@ -77,13 +77,18 @@ export function MotorbikeCard({ listing, isMock }: Props) {
           )}
         </div>
 
-        {/* Weekly/monthly price */}
-        <div className="flex gap-3 text-xs text-gray-400 mb-3">
-          {listing.price_per_week_usd && (
-            <span>${listing.price_per_week_usd}/wk</span>
-          )}
+        {/* Longer-term rates. The monthly figure is the one expats decide on —
+            renting by the month is materially cheaper than by the day — so it
+            gets the emphasis rather than sitting in the same grey as the week. */}
+        <div className="flex items-baseline gap-3 mb-3">
           {listing.price_per_month_usd && (
-            <span>${listing.price_per_month_usd}/mo</span>
+            <span className="text-sm font-semibold text-gray-900">
+              ${listing.price_per_month_usd}
+              <span className="text-xs font-normal text-gray-400">/month</span>
+            </span>
+          )}
+          {listing.price_per_week_usd && (
+            <span className="text-xs text-gray-400">${listing.price_per_week_usd}/week</span>
           )}
         </div>
 
@@ -94,15 +99,28 @@ export function MotorbikeCard({ listing, isMock }: Props) {
           {listing.delivery_available && <Chip><Truck size={9} /> Delivery</Chip>}
           {listing.gps_tracker && <Chip>GPS</Chip>}
         </div>
+
+        {!isMock && (
+          <Link
+            href={`/motorbike-rental/${listing.id}#inquire`}
+            className="relative z-20 mt-4 block w-full rounded-full bg-[#1D9E75] px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-[#0F6E56]"
+          >
+            Inquire
+          </Link>
+        )}
       </div>
     </div>
   )
 
   const href = isMock ? '/motorbike-rental/demo' : `/motorbike-rental/${listing.id}`
+  // The card used to be one big <Link>. An Inquire button cannot live inside an
+  // anchor, so the card link is now an overlay that fills the card and sits
+  // under the button, which carries its own link to the enquiry form.
   return (
-    <Link href={href} className="block">
+    <div className="relative">
       {inner}
-    </Link>
+      <Link href={href} className="absolute inset-0 z-10" aria-label={listing.title} />
+    </div>
   )
 }
 

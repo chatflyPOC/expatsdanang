@@ -11,7 +11,7 @@ export function MotorbikePricing({ listing }: { listing: MotorbikeListing }) {
 
   return (
     <>
-      <div className="border border-[#E5E7EB] rounded-2xl overflow-hidden lg:sticky lg:top-6 shadow-sm">
+      <div id="inquire" className="border border-[#E5E7EB] rounded-2xl overflow-hidden lg:sticky lg:top-6 shadow-sm scroll-mt-24">
         {/* Price header */}
         <div className="bg-gradient-to-br from-[#E1F5EE] to-[#F0FAF6] px-5 py-4 border-b border-[#B6E5D4]">
           <div className="flex items-start justify-between mb-1">

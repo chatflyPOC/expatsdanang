@@ -16,7 +16,7 @@ export function PriceBlock({ listing }: Props) {
 
   return (
     <>
-      <div className="lg:sticky lg:top-6 space-y-3">
+      <div id="inquire" className="lg:sticky lg:top-6 space-y-3 scroll-mt-24">
         {/* Price card */}
         <div className="border border-[#E5E7EB] rounded-2xl p-5 bg-white shadow-sm">
           {/* Price row */}
