@@ -278,6 +278,32 @@ export const GUIDES: GuideMeta[] = [
     ],
   },
   {
+    slug: 'da-nang-expat-groups-meetups',
+    title: 'Da Nang Expat Groups & Meetups: Which Ones Are Worth Joining',
+    excerpt:
+      'An honest field guide to the Facebook groups, Meetup circles and paid communities in Da Nang — what each is actually good for, and which ones you can skip.',
+    category: 'Lifestyle',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    sources: [
+      { title: 'Expat.com — Da Nang expat network', url: 'https://www.expat.com/en/network/asia/vietnam/da-nang/' },
+      { title: 'International Friends Da Nang — Meetup', url: 'https://www.meetup.com/international-friends-da-nang/' },
+      { title: 'Expats in Da Nang City — Facebook group', url: 'https://www.facebook.com/groups/expatsindanangcity/' },
+    ],
+  },
+  {
+    slug: 'making-friends-in-da-nang',
+    title: 'Making Friends in Da Nang: A Realistic First 90 Days',
+    excerpt:
+      'Why some newcomers build a circle in a month and others leave lonely after a year — the sequence that works, and the four habits that quietly prevent it.',
+    category: 'Lifestyle',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    sources: [
+      { title: 'RemoteClub — remote worker communities in Da Nang', url: 'https://remoteclub.com/da-nang/communities/' },
+    ],
+  },
+  {
     slug: 'is-da-nang-safe',
     title: 'Is Da Nang Safe? Honest Safety Guide for Expats (2026)',
     excerpt:
