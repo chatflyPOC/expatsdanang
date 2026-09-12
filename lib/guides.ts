@@ -242,6 +242,42 @@ export const GUIDES: GuideMeta[] = [
     ],
   },
   {
+    slug: 'vietnamese-driving-licence-da-nang',
+    title: 'How to Get a Vietnamese Driving Licence in Da Nang (2026)',
+    excerpt:
+      'Converting your foreign licence means no test — just a dossier, a sworn translation and a medical certificate. Who qualifies, what it costs, and why an IDP cannot be converted.',
+    category: 'Transport',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    service: 'visa-documents',
+    sources: [
+      { title: 'Viet Nam News — driver\'s licence conversion for foreigners', url: 'https://vietnamnews.vn/life-style/expat-corner/1719797/navigating-driver-s-licence-conversion-a-guide-for-foreigners-in-viet-nam.html' },
+      { title: 'Vietnam Law Magazine — converting foreign driver licenses', url: 'https://vietnamlawmagazine.vn/how-to-convert-foreign-driver-licenses-for-use-in-vietnam-73948.html' },
+    ],
+  },
+  {
+    slug: 'car-with-driver-da-nang',
+    title: 'Hiring a Car With a Driver in Da Nang: Costs & When It Wins',
+    excerpt:
+      'A driver removes the licence problem entirely and often costs less than self-drive once parking and fuel are counted. What to expect, how pricing works, and when it is the wrong call.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'September 2026',
+    service: 'airport-transfer',
+  },
+  {
+    slug: 'day-trips-from-da-nang-by-car',
+    title: 'Day Trips From Da Nang by Car: Hoi An, Ba Na, Hue & My Son',
+    excerpt:
+      'The four drives worth doing from Da Nang, how long each really takes, and the one geography mistake that ruins a lot of itineraries.',
+    category: 'Transport',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    sources: [
+      { title: 'Da Nang official tourism portal — destinations and routes', url: 'https://danangfantasticity.com' },
+    ],
+  },
+  {
     slug: 'is-da-nang-safe',
     title: 'Is Da Nang Safe? Honest Safety Guide for Expats (2026)',
     excerpt:

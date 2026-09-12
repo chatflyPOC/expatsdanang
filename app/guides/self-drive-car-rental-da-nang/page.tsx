@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getGuide } from '@/lib/guides'
 import { guideMetadata } from '@/lib/seo'
 import { GuideLayout, FaqJsonLd } from '@/components/guide/GuideLayout'
@@ -103,10 +104,16 @@ export default function SelfDriveCarRentalGuide() {
           </Callout>
 
           <p>
-            If your permit is the wrong type, you have two realistic routes: convert your home licence
-            to a Vietnamese one, which is open to foreigners holding a residence card and is the
-            better option for anyone staying long-term, or skip self-drive and hire a car with a
-            driver.
+            If your permit is the wrong type, you have two realistic routes:{' '}
+            <Link href="/guides/vietnamese-driving-licence-da-nang" className="text-[#1AA5D8] hover:underline">
+              convert your home licence to a Vietnamese one
+            </Link>
+            , which is open to foreigners holding a residence card and is the better option
+            for anyone staying long-term, or skip self-drive and{' '}
+            <Link href="/guides/car-with-driver-da-nang" className="text-[#1AA5D8] hover:underline">
+              hire a car with a driver
+            </Link>
+            .
           </p>
         </Section>
 
@@ -208,7 +215,11 @@ export default function SelfDriveCarRentalGuide() {
             The good news is that Da Nang is the easiest major Vietnamese city to drive in. Roads are
             wider than Hanoi&apos;s, the traffic moves more calmly than Ho Chi Minh City&apos;s, the
             grid is legible and parking is genuinely findable. The coastal road south to Hoi An and the
-            Hai Van Pass north are among the better drives in the country.
+            Hai Van Pass north are among the better drives in the country — the{' '}
+            <Link href="/guides/day-trips-from-da-nang-by-car" className="text-[#1AA5D8] hover:underline">
+              day trips guide
+            </Link>{' '}
+            covers which ones pair up in a single day and which do not.
           </p>
 
           <DoDont
