@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, Bed, Bath, Ruler, Waves, Star, ImageIcon } from 'lucide-react'
 import { HousingListingPublic, fmtPrice, typeLabel } from '@/types/housing'
 import { WishlistButton } from './WishlistButton'
@@ -21,11 +22,12 @@ export function HousingCard({ listing, showVnd }: Props) {
       {/* Image */}
       <div className="relative h-44 bg-gray-100 overflow-hidden border-b border-[#E5E7EB]">
         {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={cover}
             alt={listing.title_en}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
