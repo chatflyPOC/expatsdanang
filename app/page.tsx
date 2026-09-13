@@ -1,7 +1,7 @@
 import { HeroSection } from '@/components/HeroSection'
 import { TrustBar, TrustBarFallback } from '@/components/TrustBar'
 import { ServicesGrid } from '@/components/ServicesGrid'
-import { HowItWorks } from '@/components/HowItWorks'
+import { FeaturedListings } from '@/components/FeaturedListings'
 import { ExploreDanang } from '@/components/ExploreDanang'
 import { ReviewsSection } from '@/components/ReviewsSection'
 import { CtaBanner } from '@/components/CtaBanner'
@@ -41,7 +41,7 @@ export default async function HomePage() {
       <HeroSection />
       {stats.length > 0 ? <TrustBar stats={stats} /> : <TrustBarFallback />}
       <ServicesGrid />
-      <HowItWorks />
+      <FeaturedListings />
       <ExploreDanang />
       <ReviewsSection reviews={reviews} />
       <CtaBanner />

@@ -6,9 +6,17 @@ import { MotorbikeListing, typeLabel, CONDITION_LABELS } from '@/types/motorbike
 interface Props {
   listing: MotorbikeListing
   isMock?: boolean
+  /**
+   * `sizes` for the cover image. Defaults to the three-column browse grid.
+   * The homepage renders these four-up in a narrower container, where the
+   * default makes next/image fetch a 1920px file for a 285px slot.
+   */
+  imageSizes?: string
 }
 
-export function MotorbikeCard({ listing, isMock }: Props) {
+const DEFAULT_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+
+export function MotorbikeCard({ listing, isMock, imageSizes = DEFAULT_IMAGE_SIZES }: Props) {
   const cover = listing.images?.[listing.cover_image_index ?? 0] ?? listing.images?.[0]
   const isNew = Date.now() - new Date(listing.created_at).getTime() < 7 * 86400_000
   const cond = CONDITION_LABELS[listing.condition]
@@ -22,7 +30,7 @@ export function MotorbikeCard({ listing, isMock }: Props) {
             src={cover}
             alt={listing.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            sizes={imageSizes}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (

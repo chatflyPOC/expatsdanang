@@ -44,3 +44,47 @@ export async function getInitialMotorbikeListings(): Promise<MotorbikeListing[]>
     return []
   }
 }
+
+/**
+ * Small featured slices for the homepage.
+ *
+ * The homepage shows a taste of live inventory rather than the whole browse
+ * set, so these ask the database for only the handful of rows that will be
+ * rendered instead of pulling every available listing and slicing in JS.
+ */
+export async function getFeaturedHousingListings(
+  limit = 4
+): Promise<HousingListingPublic[]> {
+  try {
+    const supabase = createAdminClient()
+    const { data } = await supabase
+      .from('housing_listings')
+      .select(PUBLIC_COLUMNS)
+      .eq('status', 'available')
+      .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit)
+    return (data as HousingListingPublic[] | null) ?? []
+  } catch {
+    return []
+  }
+}
+
+export async function getFeaturedMotorbikeListings(
+  limit = 4
+): Promise<MotorbikeListing[]> {
+  try {
+    const supabase = createAdminClient()
+    const { data } = await supabase
+      .from('motorbike_listings')
+      .select(MOTORBIKE_PUBLIC_COLUMNS)
+      .eq('status', 'available')
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit)
+    return (data as MotorbikeListing[] | null) ?? []
+  } catch {
+    return []
+  }
+}
