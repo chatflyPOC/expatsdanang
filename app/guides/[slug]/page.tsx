@@ -48,10 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: guide.meta_title || guide.title,
     description: guide.meta_description || guide.excerpt,
     authors: guide.author_name ? [{ name: guide.author_name }] : undefined,
+    alternates: { canonical: `/guides/${slug}` },
     openGraph: {
       title: guide.meta_title || guide.title,
       description: guide.meta_description || guide.excerpt,
       type: 'article',
+      url: `/guides/${slug}`,
       images: guide.og_image_url ? [{ url: guide.og_image_url }] : [],
       publishedTime: guide.published_at ?? undefined,
       modifiedTime: guide.updated_at,
