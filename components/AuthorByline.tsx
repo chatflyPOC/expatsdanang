@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Authors } from 'lucide-react'
+import { getAuthorSlug } from '@/lib/authors'
 
 interface AuthorBylineProps {
   author_name?: string | null
@@ -57,7 +58,7 @@ export function AuthorByline({
           <div className="flex items-start justify-between gap-4">
             <div>
               <Link
-                href={`/authors/${author_name.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/authors/${getAuthorSlug(author_name)}`}
                 className="text-sm font-semibold text-gray-900 hover:text-[#1D9E75] transition-colors"
               >
                 {author_name}

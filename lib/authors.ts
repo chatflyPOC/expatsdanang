@@ -65,3 +65,14 @@ export function getAuthor(authorId?: string): Author {
   }
   return AUTHORS[authorId]
 }
+
+export function getAuthorSlug(authorName?: string): string {
+  if (!authorName) return 'nam'
+  const nameMap: Record<string, string> = {
+    'nam tran': 'nam',
+    'linh nguyen': 'linh',
+    'minh pham': 'minh',
+    'trang le': 'trang',
+  }
+  return nameMap[authorName.toLowerCase()] || 'nam'
+}
