@@ -22,9 +22,9 @@ export const AUTHORS: Record<string, Author> = {
     name: 'Nam Tran',
     title: 'Relocation Specialist & Founder',
     bio: 'Nam has helped 200+ expats settle in Da Nang since 2023. As founder of Expats Da Nang, he specializes in housing, visas, and relocation logistics for English-speaking professionals.',
-    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    avatar_url: '/authors/nam-tran.png',
     social: {
-      linkedin: 'https://linkedin.com/in/namtran',
+      linkedin: 'https://www.linkedin.com/in/namtp54478/',
     },
   },
   linh: {
