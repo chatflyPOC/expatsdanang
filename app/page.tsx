@@ -40,8 +40,8 @@ export default async function HomePage() {
     <>
       <HeroSection />
       {stats.length > 0 ? <TrustBar stats={stats} /> : <TrustBarFallback />}
-      <ServicesGrid />
       <FeaturedListings />
+      <ServicesGrid />
       <ExploreDanang />
       <ReviewsSection reviews={reviews} />
       <CtaBanner />

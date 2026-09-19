@@ -199,3 +199,7 @@ body {
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Horizontally scrollable rows (hero category tabs on phones) without a visible bar */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
