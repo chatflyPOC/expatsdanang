@@ -16,7 +16,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Why Use an Airport Transfer Instead of Grab or a Taxi?',
+        content: `Why Use an Airport Transfer Instead of Grab or a Taxi?`,
       },
       {
         type: 'comparison',
@@ -53,7 +53,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Pickup Process (Step-by-Step)',
+        content: `Pickup Process (Step-by-Step)`,
       },
       {
         type: 'steps',
@@ -68,7 +68,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Airport Transfer Pricing',
+        content: `Airport Transfer Pricing`,
       },
       {
         type: 'pricing-table',
@@ -82,7 +82,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'FAQ',
+        content: `FAQ`,
       },
       {
         type: 'faq',
@@ -98,7 +98,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Why Choose Our Airport Transfer?',
+        content: `Why Choose Our Airport Transfer?`,
       },
       {
         type: 'benefits',
@@ -122,7 +122,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Why You Need a Vietnamese Bank Account',
+        content: `Why You Need a Vietnamese Bank Account`,
       },
       {
         type: 'list',
@@ -139,7 +139,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Which Banks Accept Foreigners?',
+        content: `Which Banks Accept Foreigners?`,
       },
       {
         type: 'bank-comparison',
@@ -180,7 +180,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Documents You'll Need',
+        content: `Documents You'll Need`,
       },
       {
         type: 'requirements',
@@ -202,7 +202,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Step-by-Step Process',
+        content: `Step-by-Step Process`,
       },
       {
         type: 'steps',
@@ -218,7 +218,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Cost Breakdown',
+        content: `Cost Breakdown`,
       },
       {
         type: 'costs',
@@ -233,7 +233,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'FAQ',
+        content: `FAQ`,
       },
       {
         type: 'faq',
@@ -256,7 +256,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Common Visa Scenarios & Timelines',
+        content: `Common Visa Scenarios & Timelines`,
       },
       {
         type: 'scenarios',
@@ -278,7 +278,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Visa Types We Handle',
+        content: `Visa Types We Handle`,
       },
       {
         type: 'visa-table',
@@ -292,7 +292,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Documents We Help With',
+        content: `Documents We Help With`,
       },
       {
         type: 'doc-categories',
@@ -314,7 +314,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'FAQ',
+        content: `FAQ`,
       },
       {
         type: 'faq',
@@ -338,12 +338,12 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Translation Services We Offer',
+        content: `Translation Services We Offer`,
       },
       {
         type: 'heading',
         level: 3,
-        content: 'Documents (Professional Translation)',
+        content: `Documents (Professional Translation)`,
       },
       {
         type: 'translation-table',
@@ -359,7 +359,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 3,
-        content: 'Notarized / Certified Translation (For Official Use)',
+        content: `Notarized / Certified Translation (For Official Use)`,
       },
       {
         type: 'list',
@@ -375,7 +375,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 3,
-        content: 'Interpretation (Spoken Translation)',
+        content: `Interpretation (Spoken Translation)`,
       },
       {
         type: 'list',
@@ -392,7 +392,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Translation Pricing & Timeline',
+        content: `Translation Pricing & Timeline`,
       },
       {
         type: 'pricing',
@@ -406,7 +406,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Language Pairs Available',
+        content: `Language Pairs Available`,
       },
       {
         type: 'list',
@@ -421,7 +421,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'Why You Need Professional Translation',
+        content: `Why You Need Professional Translation`,
       },
       {
         type: 'scenarios',
@@ -446,7 +446,7 @@ export const SERVICE_CONTENT = {
       {
         type: 'heading',
         level: 2,
-        content: 'FAQ',
+        content: `FAQ`,
       },
       {
         type: 'faq',
