@@ -2,6 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { SERVICE_CONTENT } from '@/lib/service-content'
+import { ServiceAuthorByline } from '@/components/AuthorByline'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
 type ServiceContentProps = {
@@ -308,6 +309,9 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
           </div>
         </div>
       </div>
+
+      {/* Author byline */}
+      <ServiceAuthorByline />
     </article>
   )
 }

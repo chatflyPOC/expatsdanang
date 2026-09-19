@@ -52,7 +52,13 @@ export default async function MotorbikeRentalPage() {
                 '@type': 'Product',
                 name: l.title,
                 url: absoluteUrl(`/motorbike-rental/${l.id}`),
-                ...(l.images?.[0] ? { image: l.images[0] } : {}),
+                ...(l.images?.[0]
+                  ? {
+                      image: /^https?:\/\//i.test(l.images[0])
+                        ? l.images[0]
+                        : absoluteUrl(l.images[0]),
+                    }
+                  : {}),
                 ...(l.engine_cc
                   ? {
                       additionalProperty: {

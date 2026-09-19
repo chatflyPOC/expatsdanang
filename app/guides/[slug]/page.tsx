@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { AuthorByline } from '@/components/AuthorByline'
 
 type FaqItem = { q: string; a: string }
 type Source  = { title: string; url: string }
@@ -143,24 +144,15 @@ export default async function DynamicGuidePage({ params }: Props) {
 
             <h1 className="text-3xl sm:text-4xl font-bold text-[#0A3A5C] mb-6 leading-tight">{guide.title}</h1>
 
-            {/* Author card */}
-            {guide.author_name && (
-              <div className="flex items-start gap-3 mb-6 pb-6 border-b border-[#E5E7EB]">
-                {guide.author_avatar_url ? (
-                  <img src={guide.author_avatar_url} alt={guide.author_name}
-                    className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#1D9E75] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                    {guide.author_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">{guide.author_name}</p>
-                  {guide.author_title && <p className="text-xs text-[#1D9E75]">{guide.author_title}</p>}
-                  {guide.author_bio && <p className="text-xs text-gray-500 mt-1 leading-relaxed">{guide.author_bio}</p>}
-                </div>
-              </div>
-            )}
+            {/* Author byline (top) */}
+            <AuthorByline
+              author_name={guide.author_name}
+              author_title={guide.author_title}
+              author_bio={guide.author_bio}
+              author_avatar_url={guide.author_avatar_url}
+              published_at={guide.published_at}
+              position="top"
+            />
 
             {/* Excerpt lead */}
             {guide.excerpt && (
@@ -223,25 +215,14 @@ export default async function DynamicGuidePage({ params }: Props) {
               </div>
             )}
 
-            {/* Author footer */}
-            {guide.author_name && (
-              <div className="mt-10 pt-6 border-t border-[#E5E7EB] flex items-start gap-4 bg-[#f7f8fc] rounded-xl p-5">
-                {guide.author_avatar_url ? (
-                  <img src={guide.author_avatar_url} alt={guide.author_name}
-                    className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-[#1D9E75] flex items-center justify-center text-white font-semibold flex-shrink-0">
-                    {guide.author_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs text-gray-400 mb-0.5">Written by</p>
-                  <p className="font-semibold text-gray-900">{guide.author_name}</p>
-                  {guide.author_title && <p className="text-xs text-[#1D9E75]">{guide.author_title}</p>}
-                  {guide.author_bio && <p className="text-sm text-gray-600 mt-1 leading-relaxed">{guide.author_bio}</p>}
-                </div>
-              </div>
-            )}
+            {/* Author byline (bottom) */}
+            <AuthorByline
+              author_name={guide.author_name}
+              author_title={guide.author_title}
+              author_bio={guide.author_bio}
+              author_avatar_url={guide.author_avatar_url}
+              position="bottom"
+            />
           </article>
 
           {/* ── Sidebar ── */}

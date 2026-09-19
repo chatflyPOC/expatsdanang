@@ -7,6 +7,7 @@ import { MotorbikeEquipment } from '@/components/motorbike/MotorbikeEquipment'
 import { MotorbikePricing } from '@/components/motorbike/MotorbikePricing'
 import { MotorbikeStickyBar } from '@/components/motorbike/MotorbikeStickyBar'
 import { MotorbikeCard } from '@/components/motorbike/MotorbikeCard'
+import { absoluteUrl } from '@/lib/seo'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronRight, MapPin, Info } from 'lucide-react'
@@ -82,6 +83,12 @@ export default async function MotorbikeDetailPage({ params }: Props) {
 
   const isNew = Date.now() - new Date(listing.created_at).getTime() < 7 * 86400_000
 
+  // Google requires absolute URLs in structured data; listing.images may hold
+  // either a site-relative path or an already-absolute storage URL.
+  const images = (listing.images ?? []).map((src) =>
+    /^https?:\/\//i.test(src) ? src : absoluteUrl(src)
+  )
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -99,9 +106,10 @@ export default async function MotorbikeDetailPage({ params }: Props) {
         unitText: 'DAY',
       },
       availability: 'https://schema.org/InStock',
+      url: absoluteUrl(`/motorbike-rental/${listing.id}`),
     },
-    image: listing.images ?? [],
-    url: `https://expatsdanang.com/motorbike-rental/${listing.id}`,
+    ...(images.length ? { image: images } : {}),
+    url: absoluteUrl(`/motorbike-rental/${listing.id}`),
   }
 
   return (
