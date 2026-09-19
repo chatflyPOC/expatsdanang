@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getService, SERVICES } from '@/lib/services'
 import { ServiceHero } from '@/components/ServiceHero'
+import { ServiceContent } from '@/components/ServiceContent'
 import { ServiceListings } from '@/components/ServiceListings'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
@@ -51,6 +52,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       </nav>
 
       <ServiceHero service={service} />
+
+      {/* Expanded service content (900+ words) */}
+      <ServiceContent serviceSlug={slug as 'airport-transfer' | 'bank-account' | 'visa-documents' | 'translation'} />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <ServiceListings serviceSlug={slug} />
