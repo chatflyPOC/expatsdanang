@@ -312,6 +312,199 @@ export const GUIDES: GuideMeta[] = [
     readTime: '6 min read',
     updated: 'June 2026',
   },
+  // ── 30-Article SEO Content Series ─────────────────────────────────────────
+  // Motorcycle Rentals (8 articles)
+  {
+    slug: 'motorcycle-first-timer-checklist',
+    title: 'Motorcycle Rental Checklist for First-Timers: Essential Steps Before Your First Big Bike',
+    excerpt:
+      'Renting a big motorcycle for the first time in Vietnam? This checklist ensures you\'re prepared before pickup, confident during the ride, and protected if something goes wrong.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist', bio: 'Nam helps expats navigate Vietnam\'s transportation and housing.' },
+  },
+  {
+    slug: 'solo-female-rider-itineraries',
+    title: 'Solo Female Rider Itineraries: 3-Day Big Bike Routes Through Central Vietnam',
+    excerpt:
+      'Three proven itineraries designed for solo women riders aged 25–50, with safety considerations, mechanical backup, and cultural navigation built into each day.',
+    category: 'Transport',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist' },
+  },
+  {
+    slug: 'motorcycle-vs-guided-tours',
+    title: 'Motorcycle Rental vs Guided Tours: Which Is Right for Your Vietnam Trip?',
+    excerpt:
+      'Both options offer Central Vietnam rides. This guide breaks cost, flexibility, safety, and experience to help you decide between renting and joining a tour.',
+    category: 'Transport',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist' },
+  },
+  {
+    slug: 'monsoon-motorcycle-safety',
+    title: 'Monsoon Motorcycle Riding: Safety Guide for June–August Rain Season in Vietnam',
+    excerpt:
+      'June through August is monsoon season in Central Vietnam. Heavy rain, 50+ mph wind gusts, and 90%+ humidity create dangerous conditions. This guide keeps you safe when riding during southwest monsoon.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'September 2026',
+    author: { name: 'Minh Pham', title: 'Transport Expert' },
+  },
+  {
+    slug: 'international-driving-permit-2026',
+    title: 'International Driving Permit (IDP) for Motorcycle Rentals in Vietnam: 2026 Guide',
+    excerpt:
+      'Vietnam officially accepts International Driving Permits (IDP) for motorcycle rentals, but many first-timers don\'t know which format is valid, how to obtain it, or what happens if you\'re stopped without one.',
+    category: 'Transport',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist' },
+  },
+  {
+    slug: 'best-motorcycle-seasons-vietnam',
+    title: 'Best Motorcycle Riding Seasons in Vietnam: Month-by-Month Weather & Conditions',
+    excerpt:
+      'Vietnam has two seasons: dry and monsoon. Central Vietnam\'s best motorcycle season is September–November. Here\'s the month-by-month breakdown to help you pick the ideal time to rent.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'September 2026',
+    author: { name: 'Minh Pham', title: 'Transport Expert' },
+  },
+  {
+    slug: 'southeast-asia-motorcycle-tour',
+    title: 'Multi-Country Motorcycle Tour: Vietnam–Thailand–Laos Route & Border Crossing Guide',
+    excerpt:
+      'Southeast Asian motorcycle tours span 2,000+ km across three countries. This guide covers route logistics, border crossings, documentation, and 10-day itinerary planning.',
+    category: 'Transport',
+    readTime: '8 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist' },
+  },
+  {
+    slug: 'motorcycle-camping-overland',
+    title: 'Motorcycle Camping & Overland Travel: Guide to Luggage, Routes & Budget',
+    excerpt:
+      'Extend your Vietnam motorcycle trip from 3 days to 2+ weeks by camping. This guide covers luggage solutions, overland routes, camping etiquette, and budget breakdowns.',
+    category: 'Transport',
+    readTime: '6 min read',
+    updated: 'September 2026',
+    author: { name: 'Nam Tran', title: 'Relocation Specialist' },
+  },
+  // Housing Rentals (11 articles)
+  {
+    slug: 'temporary-residence-registration-guide',
+    title: 'Temporary Residence Registration (TRR) Guide: Vietnamese Police Filing for Expats',
+    excerpt:
+      'Vietnam\'s Temporary Residence Registration (TRR) is a mandatory police filing for foreigners staying 24+ hours in one location. This guide covers the 24-hour deadline, paperwork, costs, and common pitfalls.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'long-term-apartment-negotiation',
+    title: 'Long-Term Apartment Rental Negotiation: Getting the Best Da Nang Lease Deal',
+    excerpt:
+      'Negotiate your Da Nang apartment lease from first viewing to signed contract. This guide covers leverage points, negotiation scripts, and common red flags.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'best-neighborhoods-expats-da-nang',
+    title: 'Best Neighborhoods for Expats in Da Nang: Complete Guide to Districts, Costs & Lifestyle',
+    excerpt:
+      'Da Nang has five main neighborhoods for expats. Here\'s where to live based on lifestyle, budget, and community.',
+    category: 'Housing',
+    readTime: '7 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'unfurnished-apartment-guide',
+    title: 'Unfurnished Apartment Rental: What\'s Included & What You Need to Buy',
+    excerpt:
+      'Unfurnished apartments in Da Nang are 20–30% cheaper than furnished. This guide explains what\'s typically included, what you need to buy, and hidden costs.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'digital-nomad-housing-monthly',
+    title: 'Digital Nomad Housing: Monthly Flexibility for Remote Workers in Da Nang',
+    excerpt:
+      'Month-to-month apartments + co-living spaces let remote workers stay flexible. This guide covers monthly options, costs, and what to expect.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'apartment-utilities-guide',
+    title: 'Apartment Utilities Explained: Electricity, Water & Backup Power in Da Nang',
+    excerpt:
+      'Tropical living in Da Nang means high AC usage, frequent power cuts, and water concerns. This guide covers utility costs, billing, and backup solutions.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'short-term-vs-long-term-rental',
+    title: 'Short-Term vs Long-Term Apartment Rental: Cost Analysis & When to Choose Each',
+    excerpt:
+      'Unsure whether to book short-term (Airbnb) or commit to a long-term lease? This guide compares costs and helps you choose.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'finding-roommates-expats',
+    title: 'Finding Roommates in Da Nang: Expat Edition Housing Costs & House Rules',
+    excerpt:
+      'Sharing a house or apartment with roommates cuts rent by 40–50%. This guide covers finding compatible roommates, splitting expenses, and setting house rules.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'apartment-rental-scams-avoid',
+    title: 'Apartment Rental Scams: How to Avoid Common Fraud in Da Nang',
+    excerpt:
+      'Expats lose $500–5,000 annually to rental scams. This guide covers the 8 most common scams and how to avoid them.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'renovating-rental-landlord-permission',
+    title: 'Renovating Your Rental: What You Can Change & Landlord Permission',
+    excerpt:
+      'Want to paint the walls or fix that broken cabinet? This guide explains what landlords typically allow, what requires permission, and what you can\'t touch.',
+    category: 'Housing',
+    readTime: '4 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
+  {
+    slug: 'air-conditioning-humidity-tropical-tips',
+    title: 'Air Conditioning & Humidity: Tropical Rental Living Tips for Da Nang',
+    excerpt:
+      'Da Nang\'s humidity averages 75–90% annually. Improper AC use causes mold, health issues, and high electricity costs. This guide covers AC maintenance, humidity control, and tropical adaptation.',
+    category: 'Housing',
+    readTime: '5 min read',
+    updated: 'September 2026',
+    author: { name: 'Linh Nguyen', title: 'Housing Expert' },
+  },
 ]
 
 export const CATEGORY_COLORS: Record<GuideCategory, string> = {

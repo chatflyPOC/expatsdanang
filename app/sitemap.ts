@@ -77,9 +77,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const guidePages: MetadataRoute.Sitemap = GUIDES.map((g) => ({
     url: `${SITE.url}/guides/${g.slug}`,
-    lastModified: new Date('2026-06-22'),
+    // Use publication date if available; fall back to September 2026 for new content
+    lastModified: g.updated === 'September 2026' ? now : new Date('2026-06-22'),
     changeFrequency: 'weekly',
-    priority: 0.85,
+    priority: g.updated === 'September 2026' ? 0.9 : 0.85, // Boost priority for fresh content
   }))
 
   const housingPages: MetadataRoute.Sitemap = (housingListings ?? []).map((l) => ({
