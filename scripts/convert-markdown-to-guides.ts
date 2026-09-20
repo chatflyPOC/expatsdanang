@@ -258,7 +258,7 @@ function markdownToHtml(markdown: string): string {
 
 function extractFaqs(content: string): Array<{ q: string; a: string }> {
   const faqs: Array<{ q: string; a: string }> = [];
-  const faqRegex = /\*\*Q: (.*?)\*\*\s*\n\s*A: (.*?)(?=\n\n|\*\*Q:|$)/gs;
+  const faqRegex = /\*\*Q: (.*?)\*\*\s*\n\s*A: ([\s\S]*?)(?=\n\n|\*\*Q:|$)/gm;
   let match;
   while ((match = faqRegex.exec(content)) !== null) {
     faqs.push({ q: match[1].trim(), a: match[2].trim() });

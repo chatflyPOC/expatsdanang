@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Authors } from 'lucide-react'
 import { getAuthorSlug } from '@/lib/authors'
 
 interface AuthorBylineProps {

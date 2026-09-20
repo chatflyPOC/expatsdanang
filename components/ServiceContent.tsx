@@ -39,45 +39,51 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
           case 'comparison':
             return (
               <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {section.items?.map((item, i) => (
-                  <div key={i} className="border border-gray-200 rounded-lg p-5">
-                    <h4 className="font-semibold text-gray-900 mb-3">{item.name}</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      {(item.issues || item.benefits || []).map((line, j) => (
-                        <li key={j} className="flex gap-2">
-                          {line.includes('✅') ? (
-                            <>
-                              <CheckCircle2 size={16} className="text-[#1D9E75] shrink-0 mt-0.5" />
-                              <span>{line.replace('✅ ', '')}</span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-red-500 font-bold shrink-0">•</span>
-                              <span>{line}</span>
-                            </>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                {section.items?.map((item, i) => {
+                  if (typeof item !== 'object' || !('name' in item)) return null
+                  return (
+                    <div key={i} className="border border-gray-200 rounded-lg p-5">
+                      <h4 className="font-semibold text-gray-900 mb-3">{(item as any).name}</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        {((item as any).issues || (item as any).benefits || []).map((line: string, j: number) => (
+                          <li key={j} className="flex gap-2">
+                            {line.includes('✅') ? (
+                              <>
+                                <CheckCircle2 size={16} className="text-[#1D9E75] shrink-0 mt-0.5" />
+                                <span>{line.replace('✅ ', '')}</span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-red-500 font-bold shrink-0">•</span>
+                                <span>{line}</span>
+                              </>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                })}
               </div>
             )
 
           case 'steps':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.items?.map((step, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1D9E75] text-white flex items-center justify-center font-semibold text-sm">
-                      {step.num}
+                {section.items?.map((step, i) => {
+                  if (typeof step !== 'object' || !('num' in step)) return null
+                  return (
+                    <div key={i} className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1D9E75] text-white flex items-center justify-center font-semibold text-sm">
+                        {(step as any).num}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{(step as any).title}</h4>
+                        <p className="text-gray-600 text-sm mt-1">{(step as any).desc}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{step.title}</h4>
-                      <p className="text-gray-600 text-sm mt-1">{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )
 
@@ -95,45 +101,54 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {section.rows?.map((row, i) => (
-                        <tr key={i} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 text-gray-900 font-medium">{row.type}</td>
-                          <td className="px-4 py-3 text-gray-600">{row.anThuong}</td>
-                          <td className="px-4 py-3 text-gray-600">{row.nguHanhSon}</td>
-                          <td className="px-4 py-3 text-gray-500 text-xs">{row.note}</td>
-                        </tr>
-                      ))}
+                      {(section as any).rows?.map((row: any, i: number) => {
+                        if (typeof row !== 'object' || !('type' in row)) return null
+                        return (
+                          <tr key={i} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 text-gray-900 font-medium">{(row as any).type}</td>
+                            <td className="px-4 py-3 text-gray-600">{(row as any).anThuong}</td>
+                            <td className="px-4 py-3 text-gray-600">{(row as any).nguHanhSon}</td>
+                            <td className="px-4 py-3 text-gray-500 text-xs">{(row as any).note}</td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
-                {section.note && <p className="text-xs text-gray-500 mt-2">{section.note}</p>}
+                {(section as any).note && <p className="text-xs text-gray-500 mt-2">{(section as any).note}</p>}
               </div>
             )
 
           case 'faq':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.items?.map((faq, i) => (
-                  <details key={i} className="border border-gray-200 rounded-lg p-4 group">
-                    <summary className="font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
-                      {faq.q}
-                      <span className="text-[#1D9E75] group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <p className="text-gray-600 text-sm mt-3 pt-3 border-t border-gray-200">{faq.a}</p>
-                  </details>
-                ))}
+                {section.items?.map((faq, i) => {
+                  if (typeof faq !== 'object' || !('q' in faq)) return null
+                  return (
+                    <details key={i} className="border border-gray-200 rounded-lg p-4 group">
+                      <summary className="font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+                        {(faq as any).q}
+                        <span className="text-[#1D9E75] group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <p className="text-gray-600 text-sm mt-3 pt-3 border-t border-gray-200">{(faq as any).a}</p>
+                    </details>
+                  )
+                })}
               </div>
             )
 
           case 'benefits':
             return (
               <ul key={idx} className="space-y-3 mb-8">
-                {section.items?.map((benefit, i) => (
-                  <li key={i} className="flex gap-3">
-                    <CheckCircle2 size={20} className="text-[#1D9E75] shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{benefit}</span>
-                  </li>
-                ))}
+                {section.items?.map((benefit, i) => {
+                  if (typeof benefit !== 'string') return null
+                  return (
+                    <li key={i} className="flex gap-3">
+                      <CheckCircle2 size={20} className="text-[#1D9E75] shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{benefit}</span>
+                    </li>
+                  )
+                })}
               </ul>
             )
 
@@ -141,46 +156,55 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
             return (
               <div key={idx} className="mb-8">
                 <ul className="space-y-2 text-gray-700">
-                  {section.items?.map((item, i) => (
-                    <li key={i} className="flex gap-2">
-                      <span className="text-[#1D9E75] font-bold">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
+                  {section.items?.map((item, i) => {
+                    if (typeof item !== 'string') return null
+                    return (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-[#1D9E75] font-bold">•</span>
+                        <span>{item}</span>
+                      </li>
+                    )
+                  })}
                 </ul>
-                {section.note && <p className="text-sm text-gray-600 mt-3 italic">{section.note}</p>}
+                {(section as any).note && <p className="text-sm text-gray-600 mt-3 italic">{(section as any).note}</p>}
               </div>
             )
 
           case 'bank-comparison':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.banks?.map((bank, i) => (
-                  <div key={i} className="border-l-4 border-[#1D9E75] bg-[#f0fdf9] p-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">{bank.name}</h4>
-                    <ul className="text-sm text-gray-700 space-y-1">
-                      {bank.details?.map((detail, j) => (
-                        <li key={j}>• {detail}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                {(section as any).banks?.map((bank: any, i: number) => {
+                  if (typeof bank !== 'object' || !('name' in bank)) return null
+                  return (
+                    <div key={i} className="border-l-4 border-[#1D9E75] bg-[#f0fdf9] p-4">
+                      <h4 className="font-semibold text-gray-900 mb-2">{(bank as any).name}</h4>
+                      <ul className="text-sm text-gray-700 space-y-1">
+                        {(bank as any).details?.map((detail: string, j: number) => (
+                          <li key={j}>• {detail}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                })}
               </div>
             )
 
           case 'requirements':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.sections?.map((reqSection, i) => (
-                  <div key={i}>
-                    <h4 className="font-semibold text-gray-900 mb-2">{reqSection.title}</h4>
-                    <ul className="text-gray-700 space-y-1 ml-4">
-                      {reqSection.items?.map((item, j) => (
-                        <li key={j}>✓ {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                {(section as any).sections?.map((reqSection: any, i: number) => {
+                  if (typeof reqSection !== 'object' || !('title' in reqSection)) return null
+                  return (
+                    <div key={i}>
+                      <h4 className="font-semibold text-gray-900 mb-2">{(reqSection as any).title}</h4>
+                      <ul className="text-gray-700 space-y-1 ml-4">
+                        {(reqSection as any).items?.map((item: string, j: number) => (
+                          <li key={j}>✓ {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                })}
               </div>
             )
 
@@ -198,7 +222,7 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {section.visas?.map((visa, i) => (
+                    {(section as any).visas?.map((visa: any, i: number) => (
                       <tr key={i} className="hover:bg-gray-50">
                         <td className="px-4 py-3 font-medium text-gray-900">{visa.type}</td>
                         <td className="px-4 py-3 text-gray-600">{visa.validity}</td>
@@ -225,7 +249,7 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {section.rows?.map((row, i) => (
+                    {(section as any).rows?.map((row: any, i: number) => (
                       <tr key={i} className="hover:bg-gray-50">
                         <td className="px-4 py-3 font-medium text-gray-900">{row.doc}</td>
                         <td className="px-4 py-3 text-gray-600">{row.length}</td>
@@ -241,27 +265,30 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
           case 'pricing':
             return (
               <div key={idx} className="space-y-3 mb-8">
-                {section.items?.map((item, i) => (
-                  <div key={i} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900">{item.service}</h4>
-                    <div className="text-sm text-gray-600 mt-2 space-y-1">
-                      <p>Rate: {item.rate}</p>
-                      <p>Minimum: {item.min}</p>
-                      <p>Turnaround: {item.time}</p>
+                {section.items?.map((item, i) => {
+                  if (typeof item !== 'object' || !('service' in item)) return null
+                  return (
+                    <div key={i} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900">{(item as any).service}</h4>
+                      <div className="text-sm text-gray-600 mt-2 space-y-1">
+                        <p>Rate: {(item as any).rate}</p>
+                        <p>Minimum: {(item as any).min}</p>
+                        <p>Turnaround: {(item as any).time}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )
 
           case 'scenarios':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.scenarios?.map((scenario, i) => (
+                {(section as any).scenarios?.map((scenario: any, i: number) => (
                   <div key={i} className="border-l-4 border-[#1D9E75] bg-[#f0fdf9] p-4">
                     <h4 className="font-semibold text-gray-900 mb-2">{scenario.title}</h4>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      {scenario.details?.map((detail, j) => (
+                      {scenario.details?.map((detail: string, j: number) => (
                         <li key={j}>• {detail}</li>
                       ))}
                     </ul>
@@ -273,11 +300,11 @@ export function ServiceContent({ serviceSlug }: ServiceContentProps) {
           case 'doc-categories':
             return (
               <div key={idx} className="space-y-4 mb-8">
-                {section.categories?.map((cat, i) => (
+                {(section as any).categories?.map((cat: any, i: number) => (
                   <div key={i}>
                     <h4 className="font-semibold text-gray-900 mb-2">{cat.name}</h4>
                     <ul className="text-gray-700 space-y-1 ml-4">
-                      {cat.items?.map((item, j) => (
+                      {cat.items?.map((item: string, j: number) => (
                         <li key={j}>✓ {item}</li>
                       ))}
                     </ul>
