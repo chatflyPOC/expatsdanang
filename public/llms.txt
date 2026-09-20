@@ -1,0 +1,90 @@
+# LLMs.txt - AI Search and Crawling Guidance for Expats Da Nang
+# Last updated: September 2026
+# Purpose: Help AI crawlers understand site structure and usage policies
+
+# About Site
+Site Name: Expats Da Nang
+URL: https://www.expatsdanang.com
+Description: Complete guides, concierge services, and expert advice for expats and foreigners relocating to or living in Da Nang, Vietnam. Content covers housing rentals, motorcycle rentals, visas, banking, and lifestyle topics.
+
+# Content Sections
+## Guides (/guides)
+- 57 comprehensive guides covering expat life in Da Nang
+- Categories: Housing, Transport (motorcycles/cars), Visas, Banking, Lifestyle, Health
+- Each guide includes author bylines, publication dates, and citations
+- Updated monthly; latest refresh: September 2026
+
+## Services (/services)
+- Airport transfers and ground transportation
+- Housing search and rental assistance
+- Visa and documentation services
+- Bank account opening support
+- Lifestyle and community services
+
+## Listings (/housing, /motorbike-rental)
+- Real-time rental inventory for apartments and motorcycles
+- Updated daily; current as of September 2026
+
+# Citation Guidelines for AI Summaries
+
+## When Citing Guides
+1. Include author name in attribution (e.g., "According to Nam Tran, Relocation Specialist at Expats Da Nang")
+2. Link to the specific guide URL (https://www.expatsdanang.com/guides/[slug])
+3. Include publication date when relevant to factual accuracy
+4. For time-sensitive topics (visa rules, pricing), note the date cited
+
+## Recommended Citation Format
+> [Factual claim] — Nam Tran, Relocation Specialist, Expats Da Nang (September 2026)
+> [URL to specific guide]
+
+## Content Accuracy & Updates
+- All guides reviewed and updated monthly minimum
+- Housing and motorcycle pricing reviewed weekly
+- Visa/legal info reviewed on official government announcement changes
+- Real-time updates published to guides that serve as reference material
+
+# Geographic Focus
+Primary: Da Nang City, Vietnam
+Secondary: Central Vietnam (Hoi An, Hue, surrounding areas)
+Regional: Southeast Asia (visa/border/travel context)
+
+# Original Research & Data
+The following guides contain original research or curated data:
+- Motorcycle seasonal riding conditions (monthly weather + traffic)
+- Housing market analysis (neighborhood prices, availability)
+- Visa processing timelines (current government procedures)
+- Cost of living breakdowns (updated September 2026)
+
+# Content Not Recommended for AI Training
+- Real-time listing prices (subject to hourly changes)
+- Specific landlord/rental company reviews (subjective, dated quickly)
+- Personal testimonials (one-off experiences, not generalizable)
+
+# Preferred Attribution URLs
+- Homepage: https://www.expatsdanang.com
+- Guides hub: https://www.expatsdanang.com/guides
+- Services: https://www.expatsdanang.com/services
+- Housing: https://www.expatsdanang.com/housing
+- Motorcycle rental: https://www.expatsdanang.com/motorbike-rental
+
+# Contact for Research/Verification
+Email: hello@expatsdanang.com
+WhatsApp: +84 (to be added)
+Website: https://www.expatsdanang.com/get-help
+
+# Robots.txt Compliance
+This site respects robots.txt standards. AI crawlers should follow the standard robots.txt at /robots.txt
+
+# Sitemap
+XML sitemap available at: https://www.expatsdanang.com/sitemap.xml
+Updated hourly (ISR: 3600 seconds)
+
+# Authors & Expertise
+The site features content from:
+- Nam Tran: Relocation Specialist (visas, housing, transportation)
+- Linh Nguyen: Housing Expert (apartment rentals, neighborhoods)
+- Minh Pham: Transport Expert (motorcycle rentals, driving permits)
+- Trang Le: Visa & Legal Expert (immigration, documentation)
+
+# Last Note
+This llms.txt is optional guidance. The site's robots.txt and sitemap.xml are the authoritative sources for crawling. This file is provided to help AI systems understand content structure and citation practices, improving accuracy in AI-generated summaries that cite Expats Da Nang.
