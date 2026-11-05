@@ -10,6 +10,7 @@ import { WHATSAPP_NUMBER } from '@/lib/contact'
 const NAV_PRIMARY = [
   { label: 'Housing', href: '/housing', match: '/housing' },
   { label: 'Motorbike Rental', href: '/motorbike-rental', match: '/motorbike-rental' },
+  { label: 'Directory', href: '/directory', match: '/directory' },
 ]
 
 // Remaining services in the "Services" dropdown

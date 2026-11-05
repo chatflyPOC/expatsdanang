@@ -7,14 +7,15 @@ import { clsx } from 'clsx'
 import {
   LayoutDashboard, Inbox, Users, Star, SlidersHorizontal,
   Search, Menu, LogOut, Bell, BookOpen, Plus, X, Trash2,
-  Home, Bike, Plane, Landmark, FileText, Languages, ClipboardList, type LucideIcon,
+  Home, Bike, Plane, Landmark, FileText, Languages, ClipboardList, MapPinned, type LucideIcon,
 } from 'lucide-react'
 import { GuidesTab } from './guides-tab'
 import { HousingTab } from './housing-tab'
 import { MotorbikeTab } from './motorbike-tab'
+import { DirectoryTab } from './directory-tab'
 
 type Tab = 'overview' | 'requests' | 'partners' | 'reviews' | 'stats' | 'guides'
-  | 'housing' | 'motorbike'
+  | 'housing' | 'motorbike' | 'directory'
   | 'listing-airport-transfer' | 'listing-bank-account' | 'listing-visa-documents' | 'listing-translation'
 
 const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[] }[] = [
@@ -32,6 +33,7 @@ const NAV: { group: string; items: { id: Tab; label: string; icon: LucideIcon }[
     items: [
       { id: 'housing', label: 'Housing Rental', icon: Home },
       { id: 'motorbike', label: 'Motorbike rental', icon: Bike },
+      { id: 'directory', label: 'Directory', icon: MapPinned },
       { id: 'listing-airport-transfer', label: 'Airport Transfer', icon: Plane },
       { id: 'listing-bank-account', label: 'Bank Account', icon: Landmark },
       { id: 'listing-visa-documents', label: 'Visa & Documents', icon: FileText },
@@ -50,6 +52,7 @@ const TITLES: Record<Tab, string> = {
   reviews: 'Reviews', stats: 'Site stats', guides: 'Guides',
   housing: 'Housing Listings',
   motorbike: 'Motorbike Rental Listings',
+  directory: 'Expat Directory',
   'listing-airport-transfer': 'Airport Transfer Listings',
   'listing-bank-account': 'Bank Account Setup Listings',
   'listing-visa-documents': 'Visa & Documents Listings',
@@ -155,6 +158,7 @@ export default function AdminPage() {
           {tab === 'guides' && <GuidesTab />}
           {tab === 'housing' && <HousingTab />}
           {tab === 'motorbike' && <MotorbikeTab />}
+          {tab === 'directory' && <DirectoryTab />}
           {tab === 'listing-airport-transfer' && <ServiceListingsTab serviceSlug="airport-transfer" />}
           {tab === 'listing-bank-account' && <ServiceListingsTab serviceSlug="bank-account" />}
           {tab === 'listing-visa-documents' && <ServiceListingsTab serviceSlug="visa-documents" />}

@@ -8,7 +8,9 @@
  * this runs, so a failure here should never surface as a failed save. Worst
  * case the page refreshes on its own revalidation interval.
  */
-export async function revalidatePublic(scope: 'motorbike' | 'housing' | 'guides') {
+export async function revalidatePublic(
+  scope: 'motorbike' | 'housing' | 'guides' | 'directory'
+) {
   try {
     await fetch('/api/revalidate', {
       method: 'POST',

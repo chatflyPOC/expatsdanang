@@ -3,6 +3,8 @@ import { SERVICES } from '@/lib/services'
 import { GUIDES } from '@/lib/guides'
 import { SITE } from '@/lib/seo'
 import { createAdminClient } from '@/lib/supabase/server'
+import { getBusinessSitemapRows } from '@/lib/directory'
+import { CATEGORIES } from '@/types/directory'
 
 /**
  * Regenerate hourly rather than pinning listings to build time, so newly
@@ -55,8 +57,8 @@ async function getListingRows(): Promise<{
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
-  const { housing: housingListings, motorbike: motorbikeListings } =
-    await getListingRows()
+  const [{ housing: housingListings, motorbike: motorbikeListings }, businessRows] =
+    await Promise.all([getListingRows(), getBusinessSitemapRows()])
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE.url, lastModified: now, changeFrequency: 'weekly', priority: 1 },
@@ -66,7 +68,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE.url}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE.url}/housing`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
     { url: `${SITE.url}/motorbike-rental`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${SITE.url}/directory`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
   ]
+
+  // Category pages are the directory's search-intent landing pages
+  // ("English-speaking dentists in Da Nang"), so they rank above individual
+  // listings and are always present, with or without rows behind them.
+  const directoryCategoryPages: MetadataRoute.Sitemap = CATEGORIES.map((c) => ({
+    url: `${SITE.url}/directory/${c.slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  const directoryPages: MetadataRoute.Sitemap = businessRows.map((b) => ({
+    url: `${SITE.url}/directory/${b.category}/${b.slug}`,
+    lastModified: b.updated_at ? new Date(b.updated_at) : now,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
 
   const servicePages: MetadataRoute.Sitemap = SERVICES.filter((s) => !s.hubPath).map((s) => ({
     url: `${SITE.url}/services/${s.slug}`,
@@ -97,5 +117,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticPages, ...servicePages, ...guidePages, ...housingPages, ...motorbikePages]
+  return [
+    ...staticPages,
+    ...servicePages,
+    ...guidePages,
+    ...housingPages,
+    ...motorbikePages,
+    ...directoryCategoryPages,
+    ...directoryPages,
+  ]
 }

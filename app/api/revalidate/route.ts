@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { CATEGORIES } from '@/types/directory'
 
 /**
  * On-demand cache invalidation for the listing pages.
@@ -20,6 +21,9 @@ const REVALIDATABLE: Record<string, string[]> = {
   motorbike: ['/motorbike-rental', '/sitemap.xml'],
   housing: ['/housing', '/sitemap.xml'],
   guides: ['/guides', '/sitemap.xml'],
+  // The directory's category pages are prerendered from the same rows as the
+  // hub, so one listing edit has to drop all of them, not just /directory.
+  directory: ['/directory', ...CATEGORIES.map((c) => `/directory/${c.slug}`), '/sitemap.xml'],
 }
 
 async function requireAdmin() {
