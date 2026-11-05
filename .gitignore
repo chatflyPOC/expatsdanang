@@ -45,3 +45,9 @@ next-env.d.ts
 
 # SEO audit artifacts — generated output, not app code
 /expatsdanang.com-audit/
+
+# Supabase CLI cache
+/supabase/.temp/
+
+# Generated import payloads — rebuild with scripts/convert-markdown-to-guides.ts
+/supabase/import-data/
