@@ -23,7 +23,10 @@ const REVALIDATABLE: Record<string, string[]> = {
   guides: ['/guides', '/sitemap.xml'],
   // The directory's category pages are prerendered from the same rows as the
   // hub, so one listing edit has to drop all of them, not just /directory.
-  directory: ['/directory', ...CATEGORIES.map((c) => `/directory/${c.slug}`), '/sitemap.xml'],
+  // '/' is in the list because the homepage now carries the directory strip,
+  // and the homepage revalidates only once a day — without this, publishing a
+  // listing would not reach the homepage for up to 24 hours.
+  directory: ['/', '/directory', ...CATEGORIES.map((c) => `/directory/${c.slug}`), '/sitemap.xml'],
 }
 
 async function requireAdmin() {

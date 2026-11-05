@@ -35,9 +35,12 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <JsonLd
         data={[
           serviceLd(service),
+          // The homepage services grid was replaced by the directory strip, so
+          // there is no /#services anchor to send people (or crawlers) to any
+          // more. A crumb pointing at a target that no longer exists is worse
+          // than one crumb fewer.
           breadcrumbLd([
             { name: 'Home', path: '/' },
-            { name: 'Services', path: '/#services' },
             { name: service.title, path: `/services/${service.slug}` },
           ]),
         ]}
@@ -45,8 +48,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <nav className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-1.5 text-xs text-gray-400">
         <Link href="/" className="hover:text-gray-700">Home</Link>
-        <ChevronRight size={12} />
-        <Link href="/#services" className="hover:text-gray-700">Services</Link>
         <ChevronRight size={12} />
         <span className="text-gray-700">{service.title}</span>
       </nav>

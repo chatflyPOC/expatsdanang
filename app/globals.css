@@ -59,6 +59,13 @@ body {
   100% { background-position: 200% 0; }
 }
 
+/* The track holds the item list twice, so translating it by exactly half its
+   width lands copy 2 where copy 1 started and the loop is seamless. */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Scroll-reveal — paired with the Reveal component */
 .reveal {
   opacity: 0;
@@ -115,6 +122,44 @@ body {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ============================================================
+   Marquee row (homepage directory strip)
+   ============================================================ */
+
+/* Faded edges so cards enter and leave the viewport instead of being cut off
+   mid-card at the container's hard edge. */
+.marquee-viewport {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+}
+
+.marquee-track {
+  animation: marquee-x var(--marquee-duration, 48s) linear infinite;
+  width: max-content;
+}
+
+/* Reading a card is impossible while it slides away, so pointing at the strip
+   stops it. Focus does the same, for anyone tabbing through the links. */
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global reduce rule collapses the duration, which would leave the track
+     parked at -50% instead of standing still. Drop the animation outright and
+     hand the row back to the user as an ordinary horizontal scroller. */
+  .marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+  .marquee-viewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 
 /* ============================================================
