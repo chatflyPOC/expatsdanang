@@ -1,6 +1,6 @@
 import {
   Business, AMENITIES, amenityLabel, priceLevelLabel,
-  ENGLISH_LEVEL_LABELS, PAYMENT_LABELS, PaymentMethod,
+  englishLabel, PAYMENT_LABELS, PaymentMethod,
 } from '@/types/directory'
 import { Check, Clock, MapPin, Phone, Globe, Share2, Mail, MessageCircle } from 'lucide-react'
 
@@ -24,7 +24,11 @@ export function BusinessAttributes({ business }: { business: Business }) {
   return (
     <div className="space-y-6">
       <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <Item label="English">{ENGLISH_LEVEL_LABELS[business.english_level]}</Item>
+        <Item label="English">
+          {englishLabel(business.english_level) ?? (
+            <span className="text-gray-400">Not checked yet</span>
+          )}
+        </Item>
         {price && <Item label="Price level">{price}</Item>}
         {payments.length > 0 && (
           <Item label="Payment">{payments.map((p) => PAYMENT_LABELS[p]).join(', ')}</Item>

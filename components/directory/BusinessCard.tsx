@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { MapPin, BadgeCheck, Globe, ImageIcon, Star } from 'lucide-react'
 import {
   Business, amenityLabel, priceLevelLabel, verificationState,
-  ENGLISH_LEVEL_LABELS,
+  englishLabel,
 } from '@/types/directory'
 
 interface Props {
@@ -30,6 +30,7 @@ export function BusinessCard({ business, imageSizes = DEFAULT_IMAGE_SIZES }: Pro
   const cover =
     business.images?.[business.cover_image_index ?? 0] ?? business.images?.[0]
   const price = priceLevelLabel(business.price_level)
+  const english = englishLabel(business.english_level)
   const verification = verificationState(business)
   const chips = CARD_AMENITIES.filter((key) => business.amenities?.includes(key)).slice(0, 3)
 
@@ -81,9 +82,13 @@ export function BusinessCard({ business, imageSizes = DEFAULT_IMAGE_SIZES }: Pro
         <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
           <MapPin size={11} />
           <span>{business.district_label}</span>
-          <span className="text-gray-300">·</span>
-          <Globe size={11} />
-          <span>{ENGLISH_LEVEL_LABELS[business.english_level]}</span>
+          {english && (
+            <>
+              <span className="text-gray-300">·</span>
+              <Globe size={11} />
+              <span>{english}</span>
+            </>
+          )}
         </div>
 
         {business.short_description && (

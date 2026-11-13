@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   Business, BusinessCategory, BusinessStatus, EnglishLevel, PaymentMethod,
-  CATEGORIES, DISTRICTS, AMENITIES, PAYMENT_LABELS, ENGLISH_LEVEL_LABELS,
+  CATEGORIES, DISTRICTS, AMENITIES, PAYMENT_LABELS, ENGLISH_LEVEL_LABELS, englishLabel,
   verificationState,
 } from '@/types/directory'
 import { clsx } from 'clsx'
@@ -37,7 +37,7 @@ const EMPTY: Partial<FullBusiness> = {
   short_description: '', description: '',
   district: 'an-thuong', district_label: 'An Thuong', address: '',
   phone: '', website: '', maps_url: '', facebook: '', zalo: '', email: '', hours: '',
-  english_level: 'basic', price_level: 1,
+  english_level: null, price_level: 1,
   payment_methods: ['cash'], amenities: [], good_for: [],
   images: [], cover_image_index: 0,
   verified: false, verified_at: null, verified_note: '',
@@ -596,12 +596,17 @@ export function DirectoryTab() {
 
             <Section title="3. Expat attributes">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="English level *">
+                <Field label="English level">
                   <select
                     className={INPUT}
-                    value={editing.english_level ?? 'basic'}
-                    onChange={(e) => set('english_level', e.target.value as EnglishLevel)}
+                    value={editing.english_level ?? ''}
+                    onChange={(e) =>
+                      set('english_level', (e.target.value || null) as EnglishLevel | null)
+                    }
                   >
+                    {/* Blank is the honest default: the card drops the chip
+                        rather than showing a level nobody has checked. */}
+                    <option value="">Not checked yet</option>
                     {Object.entries(ENGLISH_LEVEL_LABELS).map(([v, label]) => (
                       <option key={v} value={v}>{label}</option>
                     ))}
@@ -797,7 +802,9 @@ export function DirectoryTab() {
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-xs">{row.district_label}</td>
                       <td className="px-4 py-3 text-gray-500 text-xs">
-                        {ENGLISH_LEVEL_LABELS[row.english_level]}
+                        {englishLabel(row.english_level) ?? (
+                          <span className="text-gray-300">not checked</span>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-xs">
                         {verification.current ? (

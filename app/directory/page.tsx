@@ -8,9 +8,9 @@ import { JsonLd } from '@/components/JsonLd'
 import { absoluteUrl, breadcrumbLd, pageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Expat Directory — Verified Businesses & Services in Da Nang',
+  title: 'Expat Directory — Businesses & Services in Da Nang',
   description:
-    'Clinics, cafes, gyms, schools and everyday services in Da Nang checked for English-speaking staff, card payment and posted prices. Verified by people who live here.',
+    'Clinics, cafes, gyms, schools and everyday services in Da Nang, with English level, card payment and prices recorded. Listings carry a verified badge once someone who lives here has been.',
   path: '/directory',
   keywords: [
     'Da Nang expat directory',
@@ -38,7 +38,7 @@ export default async function DirectoryPage() {
             '@type': 'ItemList',
             name: 'Expat directory — Da Nang',
             description:
-              'Businesses and services in Da Nang verified for English-speaking staff, payment methods and transparent pricing.',
+              'Businesses and services in Da Nang useful to foreigners, with English level, payment methods and pricing recorded where they have been checked.',
             url: absoluteUrl('/directory'),
             numberOfItems: CATEGORIES.length,
             itemListElement: CATEGORIES.map((c, i) => ({
@@ -69,14 +69,16 @@ export default async function DirectoryPage() {
           <p className="text-gray-500 max-w-2xl mb-6">
             A map search tells you where a clinic is. It does not tell you whether anyone
             there speaks English, whether they take a card, or whether the price on the
-            wall is the price you pay. That is what we check before anything is listed.
+            wall is the price you pay. That is what the verified badge on a listing
+            stands for.
           </p>
+          <p className="text-xs text-gray-400 mb-2">A verified badge means someone went and checked:</p>
           <div className="flex flex-wrap gap-3">
             {[
-              '✓ English level recorded, not guessed',
-              '✓ Payment methods confirmed',
-              '✓ Prices posted or quoted',
-              `✓ Re-checked every ${VERIFICATION_VALID_MONTHS} months`,
+              'English level recorded, not guessed',
+              'Payment methods confirmed',
+              'Prices posted or quoted',
+              `Re-checked every ${VERIFICATION_VALID_MONTHS} months`,
             ].map((b) => (
               <span
                 key={b}
@@ -113,7 +115,7 @@ export default async function DirectoryPage() {
                 </p>
                 <p className="text-xs text-gray-400 mt-1 line-clamp-2">{c.blurb}</p>
                 <p className="text-[11px] text-gray-400 mt-2">
-                  {count > 0 ? `${count} listed` : 'Being verified'}
+                  {count > 0 ? `${count} listed` : 'Nothing listed yet'}
                 </p>
               </Link>
             )
@@ -121,9 +123,10 @@ export default async function DirectoryPage() {
         </div>
 
         {/* Everything, filterable */}
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">All verified places</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-1">All places</h2>
         <p className="text-xs text-gray-400">
-          Filter across every category at once.
+          Filter across every category at once. Switch on <strong>Verified</strong> to
+          see only the ones somebody has been to.
         </p>
         <DirectoryBrowser initialBusinesses={businesses} />
 

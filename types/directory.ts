@@ -39,7 +39,8 @@ export interface Business {
   zalo: string | null
   email: string | null
   hours: string | null
-  english_level: EnglishLevel
+  /** Null means nobody has checked yet — not "no English". */
+  english_level: EnglishLevel | null
   price_level: number | null
   payment_methods: PaymentMethod[] | null
   amenities: string[] | null
@@ -106,7 +107,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Clinics, dentists and specialists that treat foreign patients.',
     metaTitle: 'English-Speaking Doctors & Dentists in Da Nang',
     metaDescription:
-      'Clinics and dental practices in Da Nang with English-speaking staff, published prices and international insurance accepted. Verified by Expats Da Nang.',
+      'Clinics and dental practices in Da Nang with English-speaking staff, published prices and international insurance accepted. Verified ones carry a badge.',
     keywords: [
       'English speaking doctor Da Nang', 'dentist Da Nang expat',
       'international clinic Da Nang', 'Da Nang healthcare foreigners',
@@ -122,7 +123,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Where to work: measured wifi, power outlets and laptop policy.',
     metaTitle: 'Best Cafes & Coworking Spaces to Work From in Da Nang',
     metaDescription:
-      'Laptop-friendly cafes and coworking spaces in Da Nang with real wifi speeds, power outlets and English menus. Verified by Expats Da Nang.',
+      'Laptop-friendly cafes and coworking spaces in Da Nang with real wifi speeds, power outlets and English menus. Verified ones carry a badge.',
     keywords: [
       'coworking Da Nang', 'laptop friendly cafe Da Nang',
       'work from cafe Da Nang', 'digital nomad Da Nang wifi',
@@ -138,7 +139,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Gyms, yoga and martial arts with month-to-month terms.',
     metaTitle: 'Gyms, Yoga & Fitness Studios in Da Nang for Expats',
     metaDescription:
-      'Gyms, yoga studios and martial arts clubs in Da Nang with English-speaking staff, monthly terms and no lock-in contracts. Verified by Expats Da Nang.',
+      'Gyms, yoga studios and martial arts clubs in Da Nang with English-speaking staff, monthly terms and no lock-in contracts. Verified ones carry a badge.',
     keywords: [
       'gym Da Nang', 'yoga Da Nang', 'fitness Da Nang expat',
       'monthly gym membership Da Nang',
@@ -154,7 +155,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Places with an English menu and prices on the wall.',
     metaTitle: 'Expat-Friendly Restaurants in Da Nang',
     metaDescription:
-      'Restaurants in Da Nang with English menus, listed prices, vegan and halal options. Verified by Expats Da Nang.',
+      'Restaurants in Da Nang with English menus, listed prices, vegan and halal options. Verified ones carry a badge.',
     keywords: [
       'restaurants Da Nang expat', 'English menu Da Nang',
       'vegan Da Nang', 'halal Da Nang',
@@ -170,7 +171,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'International schools, kindergartens and Vietnamese lessons.',
     metaTitle: 'International Schools & Vietnamese Lessons in Da Nang',
     metaDescription:
-      'International schools, kindergartens and Vietnamese language teachers in Da Nang, with fees and enrolment paperwork explained. Verified by Expats Da Nang.',
+      'International schools, kindergartens and Vietnamese language teachers in Da Nang, with fees and enrolment paperwork explained. Verified ones carry a badge.',
     keywords: [
       'international school Da Nang', 'Vietnamese lessons Da Nang',
       'kindergarten Da Nang expat', 'language school Da Nang',
@@ -186,7 +187,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Hair, nails and massage where the price list is posted.',
     metaTitle: 'Hair Salons, Nails & Spas in Da Nang for Foreigners',
     metaDescription:
-      'Hair salons, nail bars and spas in Da Nang with posted price lists and English-speaking staff. Verified by Expats Da Nang.',
+      'Hair salons, nail bars and spas in Da Nang with posted price lists and English-speaking staff. Verified ones carry a badge.',
     keywords: [
       'hair salon Da Nang foreigners', 'spa Da Nang', 'nails Da Nang',
       'barber Da Nang expat',
@@ -202,7 +203,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Vets, grooming and boarding, including export paperwork.',
     metaTitle: 'Vets & Pet Care in Da Nang',
     metaDescription:
-      'Veterinary clinics, grooming and boarding in Da Nang, including pet export and import paperwork. Verified by Expats Da Nang.',
+      'Veterinary clinics, grooming and boarding in Da Nang, including pet export and import paperwork. Verified ones carry a badge.',
     keywords: [
       'vet Da Nang', 'pet care Da Nang', 'dog grooming Da Nang',
       'pet export Vietnam',
@@ -218,7 +219,7 @@ export const CATEGORIES: CategoryConfig[] = [
     blurb: 'Laundry, repairs, movers, lawyers and accountants.',
     metaTitle: 'Everyday Services for Expats in Da Nang',
     metaDescription:
-      'Laundry, bike repair, movers, lawyers and accountants in Da Nang used by expats, with English-speaking contacts. Verified by Expats Da Nang.',
+      'Laundry, bike repair, movers, lawyers and accountants in Da Nang used by expats, with English-speaking contacts. Verified ones carry a badge.',
     keywords: [
       'laundry Da Nang', 'movers Da Nang', 'lawyer Da Nang expat',
       'accountant Da Nang foreigner',
@@ -273,6 +274,15 @@ export const ENGLISH_LEVEL_LABELS: Record<EnglishLevel, string> = {
   fluent: 'Fluent English',
   basic: 'Basic English',
   none: 'Vietnamese only',
+}
+
+/**
+ * Label for a row's English level, or null when nobody has recorded one.
+ * Callers are expected to drop the chip entirely on null: an unchecked
+ * business must not read as "Basic English".
+ */
+export function englishLabel(level: EnglishLevel | null): string | null {
+  return level ? ENGLISH_LEVEL_LABELS[level] : null
 }
 
 export const PAYMENT_LABELS: Record<PaymentMethod, string> = {

@@ -113,8 +113,8 @@ export async function DirectoryMarquee() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           <p className="text-xs text-gray-400 flex items-center gap-1.5">
             <BadgeCheck size={13} className="text-[#1D9E75]" />
-            First verified listings are being added — nothing goes up before someone
-            has been there.
+            Nothing listed yet. The badge goes on a listing once someone has been
+            there.
           </p>
         </div>
       )}

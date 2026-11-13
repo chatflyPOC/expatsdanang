@@ -249,12 +249,11 @@ export function DirectoryBrowser({ initialBusinesses = [], category }: Props) {
           <p className="text-sm font-medium text-gray-700 mb-1">
             {activeFilterCount > 0 || debouncedQuery
               ? 'Nothing matches those filters yet'
-              : 'This part of the directory is still being verified'}
+              : 'Nothing listed here yet'}
           </p>
           <p className="text-xs text-gray-400 max-w-sm mx-auto">
-            Every place here is visited or called before it is listed, so the directory
-            fills up slowly on purpose. Tell us what you were looking for and we will
-            check it next.
+            Verifying a place means going or calling, so the badge spreads slowly on
+            purpose. Tell us what you were looking for and we will check it next.
           </p>
           <div className="flex items-center justify-center gap-3 mt-5">
             {(activeFilterCount > 0 || debouncedQuery) && (

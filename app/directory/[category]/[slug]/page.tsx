@@ -8,7 +8,7 @@ import { BusinessCard } from '@/components/directory/BusinessCard'
 import { getBusinessBySlug, getRelatedBusinesses } from '@/lib/directory'
 import {
   getCategory, verificationState, VERIFICATION_VALID_MONTHS,
-  ENGLISH_LEVEL_LABELS,
+  englishLabel,
 } from '@/types/directory'
 import { JsonLd } from '@/components/JsonLd'
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo'
@@ -30,7 +30,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${business.name} — ${business.district_label}, Da Nang`
   const description =
     business.short_description ??
-    `${config?.label ?? 'Business'} in ${business.district_label}, Da Nang. ${ENGLISH_LEVEL_LABELS[business.english_level]}.`
+    `${config?.label ?? 'Business'} in ${business.district_label}, Da Nang.${
+      englishLabel(business.english_level) ? ` ${englishLabel(business.english_level)}.` : ''
+    }`
   const cover = business.images?.[business.cover_image_index ?? 0]
 
   return {
