@@ -75,6 +75,7 @@ export const DISTRICTS = [
   { value: 'my-khe', label: 'My Khe' },
   { value: 'son-tra', label: 'Son Tra' },
   { value: 'hai-chau', label: 'Hai Chau' },
+  { value: 'thanh-khe', label: 'Thanh Khe' },
   { value: 'ngu-hanh-son', label: 'Ngu Hanh Son' },
   { value: 'cam-le', label: 'Cam Le' },
 ] as const

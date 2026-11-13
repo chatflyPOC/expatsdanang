@@ -94,6 +94,25 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com", pathname: "/**" },
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
+
+      // Directory seed photos, hotlinked from each business's own site.
+      // This list is a stopgap, not an architecture: every one of these is
+      // someone else's server, so a redesign on their side breaks a card on
+      // ours, and we are spending their bandwidth. Replace a row's images
+      // with an upload from the admin Directory tab and its host can come
+      // off this list. The list should shrink over time, not grow.
+      { protocol: "https", hostname: "acecoworking.vn", pathname: "/**" },
+      { protocol: "https", hostname: "bvtamtridanang.com.vn", pathname: "/**" },
+      { protocol: "https", hostname: "coworkingdanang.com", pathname: "/**" },
+      { protocol: "https", hostname: "danang.sis.edu.vn", pathname: "/**" },
+      { protocol: "https", hostname: "herbalspa.vn", pathname: "/**" },
+      { protocol: "https", hostname: "hoanmy.com", pathname: "/**" },
+      { protocol: "https", hostname: "lecomptoirdng.com", pathname: "/**" },
+      { protocol: "https", hostname: "leveninspa.com", pathname: "/**" },
+      { protocol: "https", hostname: "rootsplantbasedcafe.com", pathname: "/**" },
+      { protocol: "https", hostname: "spandayoga.vn", pathname: "/**" },
+      { protocol: "https", hostname: "statics.vincom.com.vn", pathname: "/**" },
+      { protocol: "https", hostname: "xliiicoffee.com", pathname: "/**" },
     ],
   },
 };
