@@ -39,6 +39,12 @@ export interface Business {
   zalo: string | null
   email: string | null
   hours: string | null
+  /**
+   * schema.org `openingHours` strings. `hours` is the display copy and is
+   * not parseable, so structured data reads this instead; null means we have
+   * no machine-readable source and the page emits none.
+   */
+  opening_hours_spec: string[] | null
   /** Null means nobody has checked yet — not "no English". */
   english_level: EnglishLevel | null
   price_level: number | null
@@ -64,7 +70,7 @@ export const PUBLIC_COLUMNS = [
   'id', 'created_at', 'updated_at', 'slug', 'name', 'category',
   'short_description', 'description',
   'district', 'district_label', 'address', 'lat', 'lng',
-  'phone', 'website', 'maps_url', 'facebook', 'zalo', 'email', 'hours',
+  'phone', 'website', 'maps_url', 'facebook', 'zalo', 'email', 'hours', 'opening_hours_spec',
   'english_level', 'price_level', 'payment_methods', 'amenities', 'good_for',
   'images', 'cover_image_index',
   'verified', 'verified_at', 'verified_note', 'claimed_by',

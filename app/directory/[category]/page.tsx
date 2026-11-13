@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import { DirectoryBrowser } from '@/components/directory/DirectoryBrowser'
-import { getBusinesses } from '@/lib/directory'
+import { getBusinesses, getCategoryCounts } from '@/lib/directory'
 import { CATEGORIES, getCategory } from '@/types/directory'
 import { JsonLd } from '@/components/JsonLd'
 import { absoluteUrl, breadcrumbLd, pageMetadata } from '@/lib/seo'
@@ -24,12 +24,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const config = getCategory(category)
   if (!config) return { title: 'Not found — Expats Da Nang' }
 
-  return pageMetadata({
+  const meta = pageMetadata({
     title: config.metaTitle,
     description: config.metaDescription,
     path: `/directory/${config.slug}`,
     keywords: config.keywords,
   })
+
+  // A category with nothing published is a heading and an empty state. It
+  // stays reachable — somebody browsing the hub should still be able to open
+  // it and ask us to look — but it is not worth indexing, and a handful of
+  // near-identical empty pages is how a directory earns a thin-content
+  // problem. `follow` stays on so the links out of it still count.
+  const counts = await getCategoryCounts()
+  return (counts[config.slug] ?? 0) > 0
+    ? meta
+    : { ...meta, robots: { index: false, follow: true } }
 }
 
 export default async function DirectoryCategoryPage({ params }: Props) {

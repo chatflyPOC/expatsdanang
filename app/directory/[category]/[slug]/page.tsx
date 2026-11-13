@@ -67,6 +67,13 @@ export default async function BusinessDetailPage({ params }: Props) {
   )
   const url = absoluteUrl(`/directory/${business.category}/${business.slug}`)
 
+  // Every page of the business's own that we know about, so a search engine
+  // can tie this entry to the real thing rather than treating it as a
+  // separate business with the same name.
+  const sameAs = [business.website, business.facebook].filter(
+    (u): u is string => Boolean(u) && /^https?:\/\//i.test(u!)
+  )
+
   return (
     <div className="min-h-screen bg-white">
       <JsonLd
@@ -82,12 +89,20 @@ export default async function BusinessDetailPage({ params }: Props) {
             '@id': `${url}#business`,
             name: business.name,
             url,
+            // The layout puts a site-wide LocalBusiness for Expats Da Nang on
+            // every page. On a directory entry that leaves two business nodes
+            // competing to be what the page is about, so say outright that
+            // this one is.
+            mainEntityOfPage: { '@type': 'WebPage', '@id': url },
             ...(business.short_description ? { description: business.short_description } : {}),
             ...(images.length ? { image: images } : {}),
             ...(business.phone ? { telephone: business.phone } : {}),
             ...(business.email ? { email: business.email } : {}),
-            ...(business.website ? { sameAs: [business.website] } : {}),
-            ...(business.hours ? { openingHours: business.hours } : {}),
+            ...(sameAs.length ? { sameAs } : {}),
+            ...(business.maps_url ? { hasMap: business.maps_url } : {}),
+            ...(business.opening_hours_spec?.length
+              ? { openingHours: business.opening_hours_spec }
+              : {}),
             ...(business.price_level ? { priceRange: '$'.repeat(business.price_level) } : {}),
             address: {
               '@type': 'PostalAddress',

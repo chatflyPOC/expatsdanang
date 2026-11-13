@@ -3,7 +3,7 @@ import { SERVICES } from '@/lib/services'
 import { GUIDES } from '@/lib/guides'
 import { SITE } from '@/lib/seo'
 import { createAdminClient } from '@/lib/supabase/server'
-import { getBusinessSitemapRows } from '@/lib/directory'
+import { getBusinessSitemapRows, getCategoryCounts } from '@/lib/directory'
 import { CATEGORIES } from '@/types/directory'
 
 /**
@@ -57,8 +57,8 @@ async function getListingRows(): Promise<{
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
-  const [{ housing: housingListings, motorbike: motorbikeListings }, businessRows] =
-    await Promise.all([getListingRows(), getBusinessSitemapRows()])
+  const [{ housing: housingListings, motorbike: motorbikeListings }, businessRows, categoryCounts] =
+    await Promise.all([getListingRows(), getBusinessSitemapRows(), getCategoryCounts()])
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE.url, lastModified: now, changeFrequency: 'weekly', priority: 1 },
@@ -74,7 +74,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Category pages are the directory's search-intent landing pages
   // ("English-speaking dentists in Da Nang"), so they rank above individual
   // listings and are always present, with or without rows behind them.
-  const directoryCategoryPages: MetadataRoute.Sitemap = CATEGORIES.map((c) => ({
+  // Only categories that actually hold something. An empty category page is
+  // noindex (see app/directory/[category]/page.tsx), and submitting a URL we
+  // ask Google not to index is a contradiction it reports back as an error.
+  const directoryCategoryPages: MetadataRoute.Sitemap = CATEGORIES.filter(
+    (c) => (categoryCounts[c.slug] ?? 0) > 0
+  ).map((c) => ({
     url: `${SITE.url}/directory/${c.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',

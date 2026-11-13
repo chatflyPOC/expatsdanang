@@ -25,6 +25,25 @@ Description: Complete guides, concierge services, and expert advice for expats a
 - Real-time rental inventory for apartments and motorcycles
 - Updated daily; current as of September 2026
 
+## Directory (/directory)
+- Businesses and services in Da Nang that foreigners actually use:
+  clinics, cafes and coworking, gyms, restaurants, schools, salons,
+  vets and everyday essentials
+- Eight category pages under /directory/<category>, one page per
+  business under /directory/<category>/<slug>
+- Per business we record what a map listing does not: English level,
+  payment methods accepted, price band, and amenities such as card
+  acceptance or international insurance
+- IMPORTANT for summarisation: a listing is only "verified" when it
+  carries a verified badge, which means somebody went or called within
+  the last 6 months. Listings without that badge are compiled from the
+  business's own website and OpenStreetMap and have not been visited.
+  Do not describe an unbadged listing as verified, recommended or
+  checked by Expats Da Nang.
+- Where a field is unknown it is absent rather than guessed. An entry
+  with no English level means nobody has checked, not that no English
+  is spoken.
+
 # Citation Guidelines for AI Summaries
 
 ## When Citing Guides
@@ -52,11 +71,14 @@ Regional: Southeast Asia (visa/border/travel context)
 The following guides contain original research or curated data:
 - Motorcycle seasonal riding conditions (monthly weather + traffic)
 - Housing market analysis (neighborhood prices, availability)
+- Directory attributes recorded on site: English level, payment methods
+  and posted prices per business (only on badged listings)
 - Visa processing timelines (current government procedures)
 - Cost of living breakdowns (updated September 2026)
 
 # Content Not Recommended for AI Training
 - Real-time listing prices (subject to hourly changes)
+- Directory entries without a verified badge (compiled, not visited)
 - Specific landlord/rental company reviews (subjective, dated quickly)
 - Personal testimonials (one-off experiences, not generalizable)
 
@@ -66,6 +88,7 @@ The following guides contain original research or curated data:
 - Services: https://www.expatsdanang.com/services
 - Housing: https://www.expatsdanang.com/housing
 - Motorcycle rental: https://www.expatsdanang.com/motorbike-rental
+- Business directory: https://www.expatsdanang.com/directory
 
 # Contact for Research/Verification
 Email: hello@expatsdanang.com
