@@ -103,6 +103,7 @@ const nextConfig: NextConfig = {
       // off this list. The list should shrink over time, not grow.
       { protocol: "https", hostname: "acecoworking.vn", pathname: "/**" },
       { protocol: "https", hostname: "bvtamtridanang.com.vn", pathname: "/**" },
+      { protocol: "https", hostname: "cardipizzeria.com", pathname: "/**" },
       { protocol: "https", hostname: "coworkingdanang.com", pathname: "/**" },
       { protocol: "https", hostname: "danang.sis.edu.vn", pathname: "/**" },
       { protocol: "https", hostname: "herbalspa.vn", pathname: "/**" },
@@ -111,6 +112,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "leveninspa.com", pathname: "/**" },
       { protocol: "https", hostname: "rootsplantbasedcafe.com", pathname: "/**" },
       { protocol: "https", hostname: "spandayoga.vn", pathname: "/**" },
+      // Wix's shared image CDN, not one business's own server: the climbing
+      // gym's photo lives here. Broader than the entries around it, closer in
+      // kind to the Cloudinary and Unsplash CDNs above.
+      { protocol: "https", hostname: "static.wixstatic.com", pathname: "/**" },
       { protocol: "https", hostname: "statics.vincom.com.vn", pathname: "/**" },
       { protocol: "https", hostname: "xliiicoffee.com", pathname: "/**" },
     ],
