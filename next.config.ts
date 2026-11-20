@@ -116,7 +116,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "oliviasprime.com", pathname: "/**" },
       { protocol: "https", hostname: "rootsplantbasedcafe.com", pathname: "/**" },
       { protocol: "https", hostname: "shamrocksportsbar.com", pathname: "/**" },
-      { protocol: "https", hostname: "sns.edu.vn", pathname: "/**" },
+      // sns.edu.vn is deliberately absent. Its photos load from Vietnam
+      // but its origin refuses Vercel's image optimizer, so every
+      // /_next/image request for them came back 400 while the hosts
+      // added alongside returned 200. Allowlisting it only buys a
+      // broken card; those photos need uploading to our own storage.
       { protocol: "https", hostname: "spandayoga.vn", pathname: "/**" },
       { protocol: "https", hostname: "thenewgym.vn", pathname: "/**" },
       // Two businesses serve their photos from a CDN of their own rather
