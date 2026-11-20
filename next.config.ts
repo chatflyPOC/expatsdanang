@@ -102,6 +102,7 @@ const nextConfig: NextConfig = {
       // with an upload from the admin Directory tab and its host can come
       // off this list. The list should shrink over time, not grow.
       { protocol: "https", hostname: "acecoworking.vn", pathname: "/**" },
+      { protocol: "https", hostname: "apu.edu.vn", pathname: "/**" },
       { protocol: "https", hostname: "bvtamtridanang.com.vn", pathname: "/**" },
       { protocol: "https", hostname: "cardipizzeria.com", pathname: "/**" },
       { protocol: "https", hostname: "coworkingdanang.com", pathname: "/**" },
@@ -110,8 +111,20 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "hoanmy.com", pathname: "/**" },
       { protocol: "https", hostname: "lecomptoirdng.com", pathname: "/**" },
       { protocol: "https", hostname: "leveninspa.com", pathname: "/**" },
+      { protocol: "https", hostname: "madamelan.vn", pathname: "/**" },
+      { protocol: "https", hostname: "missteak.co", pathname: "/**" },
+      { protocol: "https", hostname: "oliviasprime.com", pathname: "/**" },
       { protocol: "https", hostname: "rootsplantbasedcafe.com", pathname: "/**" },
+      { protocol: "https", hostname: "shamrocksportsbar.com", pathname: "/**" },
+      { protocol: "https", hostname: "sns.edu.vn", pathname: "/**" },
       { protocol: "https", hostname: "spandayoga.vn", pathname: "/**" },
+      { protocol: "https", hostname: "thenewgym.vn", pathname: "/**" },
+      // Two businesses serve their photos from a CDN of their own rather
+      // than the site domain: fmp.vn is the clinic group's, and
+      // cdn-kvweb.citigo.net is the KiotViet storefront host Nobipet's
+      // shop runs on.
+      { protocol: "https", hostname: "cdn.fmp.vn", pathname: "/**" },
+      { protocol: "https", hostname: "cdn-kvweb.citigo.net", pathname: "/**" },
       // Wix's shared image CDN, not one business's own server: the climbing
       // gym's photo lives here. Broader than the entries around it, closer in
       // kind to the Cloudinary and Unsplash CDNs above.
